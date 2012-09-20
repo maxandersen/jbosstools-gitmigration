@@ -3,11 +3,13 @@
 import sys
 from git_fast_filter import Blob, Reset, FileChanges, Commit, FastExportFilter
 from git_fast_filter import get_commit_count, get_total_objects
+import re
 
-if len(sys.argv) != 3:
-  raise SystemExit("Syntax:\n  %s SOURCE_REPO TARGET_REPO")
+if len(sys.argv) != 4:
+  raise SystemExit("Syntax:\n  %s SOURCE_REPO TARGET_REPO REGULAR_EXP_FILTER")
 source_repo = sys.argv[1]
 target_repo = sys.argv[2]
+regexp = re.compile(sys.argv[3])
 
 total_objects = get_total_objects(source_repo)  # blobs + trees
 total_commits = get_commit_count(source_repo)
@@ -29,13 +31,11 @@ def my_commit_callback(commit):
   commit_count += 1
   print_progress()
   new_file_changes = []
-  if not commit.branch.endswith("/dead"):
-    for change in commit.file_changes:
-      print commit.branch + "->" + change.filename
-      if change.filename.startswith('hibernate'):
+  for change in commit.file_changes:
+      if regexp.match(change.filename):
         new_file_changes.append(change)
-  else:
-    print "Skipped " + commit.branch
+        print commit.branch + ":" + change.filename
+
   commit.file_changes = new_file_changes
   
 filter = FastExportFilter(blob_callback   = my_blob_callback,
