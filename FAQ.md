@@ -26,6 +26,9 @@ The following is a snapshot from the suggested layout of time of writing:
 
 <table>
   <th>SVN location</th> <th>GitHub repo</th> <th>Gatekeeper</th> <th>Comments</th>
+  <tr>	
+   <td>build</td>         <td>jbosstools-parent<br/>jbosstools-targetplatform<br/></td>     <td>TBD</td>  <td>Might not be available from day one</td>
+  </tr>
   <tr>
    <td>documentation</td> <td>jbosstools-documentation</td><td>TBD</td>
   </tr>
