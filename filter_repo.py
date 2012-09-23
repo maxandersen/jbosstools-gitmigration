@@ -4,12 +4,15 @@ import sys
 from git_fast_filter import Blob, Reset, FileChanges, Commit, FastExportFilter
 from git_fast_filter import get_commit_count, get_total_objects
 import re
+import datetime
 
 if len(sys.argv) != 4:
   raise SystemExit("Syntax:\n  %s SOURCE_REPO TARGET_REPO REGULAR_EXP_FILTER")
 source_repo = sys.argv[1]
 target_repo = sys.argv[2]
 regexp = re.compile(sys.argv[3])
+
+start = datetime.datetime.now()
 
 total_objects = get_total_objects(source_repo)  # blobs + trees
 total_commits = get_commit_count(source_repo)
@@ -34,10 +37,15 @@ def my_commit_callback(commit):
   for change in commit.file_changes:
       if regexp.match(change.filename):
         new_file_changes.append(change)
-        print commit.branch + ":" + change.filename
+        #print commit.branch + ":" + change.filename
 
   commit.file_changes = new_file_changes
   
 filter = FastExportFilter(blob_callback   = my_blob_callback,
                           commit_callback = my_commit_callback)
 filter.run(source_repo, target_repo)
+
+end = datetime.datetime.now()
+
+print "End : " + str(end-start)
+
