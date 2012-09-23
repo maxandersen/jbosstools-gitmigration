@@ -4,6 +4,9 @@ Scripts for doing JBoss Tools SVN to Git migration.
 This repo contains a copy/fork of git://gitorious.org/git_fast_filter/mainline.git wit 
 addition of a set of .py scripts used to perform the migration.
 
+See FAQ.md for questions concerning the migration.
+
+
 1) git clone mirror repo to get all branches lcoal and use the
 readonly url to avoid being able to mirror back.
 
@@ -58,7 +61,7 @@ readonly url to avoid being able to mirror back.
 
    Each repo is done by running filter_repo.py like this:
    
-   $ python filter_repo.py jbosstools-svn-mirror jbosstools-base "^common.*|^tests.*|^runtime.*|^usage.*"
+       $ python filter_repo.py jbosstools-svn-mirror jbosstools-base "^common.*|^tests.*|^runtime.*|^usage.*"
 
    And then master is checked out, garbage collected, removed empty
    commits, each repo with just one subdir is filter-branched to have
@@ -91,7 +94,7 @@ Resources used:
 [git_fast_filter]: gitorious.org/git_fast_filter "Git fast filter"
 [Atlassian SVN to Git Migration]: http://blogs.atlassian.com/2012/01/moving-confluence-from-subversion-to-git
 [Using tmpfs with filter_branch]: http://debuggable.com/posts/muscles-on-demand-clean-a-large-git-repository-the-cloud-way:49ba8538-d7ac-486d-b132-0cce4834cda3
-[ramdisk for OSX][]: https://gist.github.com/822455
+[ramdisk for OSX]: https://gist.github.com/822455
 [Clean out empty commits]: http://stackoverflow.com/questions/7067015/svn2git-with-exclude-any-way-to-ignore-the-empty-blank-commits?lq=1
 [Detach subdirectory into separate git repository]: http://stackoverflow.com/questions/359424/detach-subdirectory-into-separate-git-repository
 
