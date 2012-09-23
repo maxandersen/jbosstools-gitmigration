@@ -1,6 +1,6 @@
 # I hate this split, why can't we just have everything in one big repo ?
 
-There are more than a few resources for this:
+There are more than a few reasons for this:
 
 1) The big repository made svn slow - it also makes Git slow (yes, its that big!)
 
@@ -22,7 +22,7 @@ You can see [JBIDE-12475](https://issues.jboss.org/browse/JBIDE-12475) for discu
 
 The following is a snapshot from the suggested layout of time of writing:
 
-   ![Overview](https://issues.jboss.org/secure/attachment/12357034/12357034_max_suggestio.png)
+   ![Overview](https://issues.jboss.org/secure/attachment/12357038/12357038_max_suggestio.png)
 
 <table>
   <th>SVN location</th> <th>GitHub repo</th> <th>Gatekeeper</th> <th>Comments</th>
