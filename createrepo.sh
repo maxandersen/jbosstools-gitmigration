@@ -17,4 +17,5 @@ export GHROOT=${GITHUB_ROOT:-user/repos}
 # create in jbosstools organization
 #export GITHUB_ROOT orgs/jbosstools/repos
 
-xargs -n 1 -I {} curl -u "$GITHUBUSER:$GITHUBPWD" https://api.github.com/$GHROOT -d '{"name":"scratch-{}", "description":"scratch test repo for {} svn-git migration"}' 
+JSON="{\"name\":\"scratch-$1\", \"description\":\"scratch test repo for $1 svn-git migration\"}"
+curl -u "$GITHUBUSER:$GITHUBPWD" https://api.github.com/$GHROOT -d "$JSON"
