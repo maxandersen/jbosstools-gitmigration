@@ -104,7 +104,7 @@ we can help locate it or if something is indeed missing resurrect it if need be.
 
 It will remain for doing old builds if it ever needs to be done again.
 
-Content of modules in `trunk` that have been migrated to SVN will be svn deleteed leaving
+Content of modules in `trunk` that have been migrated to Git will be svn deleteed leaving
 only a README.md file pointing to the new home of the repository and the module trunk will
 be marked read-only to avoid suprises.
 
