@@ -21,6 +21,7 @@ python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-central "^maven.
 python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-webservices "^ws.*"
 python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-xulrunner "^xulrunner\/.*"
 python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-documentation "^documentation.*"
+python filter_tests.py jbosstools-svn-mirror $NEWROOT/jbosstools-integration-tests 
 
 cd $NEWROOT
 
