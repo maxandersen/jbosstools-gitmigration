@@ -34,6 +34,9 @@ find jbosstools-* -maxdepth 0 | xargs -n 1 -I {} bash -c 'cd {} && git reset --h
 echo Removing empty commits....
 find jbosstools-* -maxdepth 0 | xargs -n 1 -I {} bash -c "cd {} && git filter-branch --tag-name-filter cat --prune-empty -- --all"
 
+#creating dir to make it not be filtered.
+mkdir $NEWROOT/jbosstools-integration-tests/site
+
 echo subdirectory filter for repo with just one root directory....
 find jbosstools-* -type d -maxdepth 0 -links 4 -exec bash -c "cd {} && pwd &&  git filter-branch --tag-name-filter cat --prune-empty --subdirectory-filter * -f -- --all" \;
 
