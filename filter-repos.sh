@@ -21,6 +21,15 @@ python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-central "^maven.
 python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-webservices "^ws.*"
 python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-xulrunner "^xulrunner\/.*"
 python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-documentation "^documentation.*"
+python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-gwt "^gwt.*"
+python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-bpel "^bpel.*"
+python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-jbpm "^jbpm.*|^flow.*"
+python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-runtime-soa "^runtime-soa.*"
+
+python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-maven-plugins "^build/tycho-plugins.*"
+python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-build "^build/parent.*|^build/target-platform.*|^build/target-platforms.*"
+python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-build-sites "^build/aggregate.*|^build/results.*"
+python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-build-continous "^build/util.*|^build/emma.*|^build/jacoco.*"
 python filter_tests.py jbosstools-svn-mirror $NEWROOT/jbosstools-integration-tests 
 
 cd $NEWROOT
