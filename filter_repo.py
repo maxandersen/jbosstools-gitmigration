@@ -19,6 +19,8 @@ total_commits = get_commit_count(source_repo)
 object_count = 0
 commit_count = 0
 
+global_exclude = re.compile("^documentation/qa.*|^documentation/development.*|^xulrunner2.*")
+
 def print_progress():
   global object_count, commit_count, total_objects, total_commits
   print "\rRewriting commits... %d/%d  (%d objects)" \
@@ -35,9 +37,11 @@ def my_commit_callback(commit):
   print_progress()
   new_file_changes = []
   for change in commit.file_changes:
-      if regexp.match(change.filename):
-        new_file_changes.append(change)
-        #print commit.branch + ":" + change.filename
+    if global_exclude.match(change.filename):
+      pass
+    elif regexp.match(change.filename):
+      new_file_changes.append(change)
+      #print commit.branch + ":" + change.filename
 
   commit.file_changes = new_file_changes
   

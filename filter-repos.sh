@@ -4,33 +4,42 @@ if [ -z "$NEWROOT" ]
   exit
 fi
 
+ORIGINAL_REPO=jbosstools-full-svn-mirror
+
 echo Running filter_repo for each repository
 
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-hibernate "^hibernatetools.*\/"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-birt "^birt.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-base "^common.*|^tests.*|^runtime.*|^usage.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-freemarker "^freemarker.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-forge "^forge.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-deltacloud "^deltacloud.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-server "^archives.*|^as.*|^jmx.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-javaee "^cdi.*|^jsf.*|^jst.*|^seam.*|^struts.*|^vpe.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-jst "^jst.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-vpe "^vpe.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-portlet "^portlet.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-central "^maven.*|^examples.*|^central.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-webservices "^ws.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-xulrunner "^xulrunner\/.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-documentation "^documentation.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-gwt "^gwt.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-bpel "^bpel.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-jbpm "^jbpm.*|^flow.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-runtime-soa "^runtime-soa.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-base "^common.*|^tests.*|^runtime.*|^usage.*"
 
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-maven-plugins "^build/tycho-plugins.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-build "^build/parent.*|^build/target-platform.*|^build/target-platforms.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-build-sites "^build/aggregate.*|^build/results.*"
-python filter_repo.py jbosstools-svn-mirror $NEWROOT/jbosstools-build-continous "^build/util.*|^build/emma.*|^build/jacoco.*"
-python filter_tests.py jbosstools-svn-mirror $NEWROOT/jbosstools-integration-tests 
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-server "^archives.*|^as.*|^jmx.*"
+
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-freemarker "^freemarker.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-hibernate "^hibernatetools.*\/"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-birt "^birt.*"
+
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-xulrunner "^xulrunner\/.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-jst "^jst.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-vpe "^vpe.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-forge "^forge.*"
+
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-javaee "^cdi.*|^jsf.*|^seam.*|^struts.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-deltacloud "^deltacloud.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-portlet "^portlet.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-webservices "^ws.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-central "^maven.*|^examples.*|^central.*"
+
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-documentation "^documentation.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-gwt "^gwt.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-bpel "^bpel.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-jbpm "^jbpm.*|^flow.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-runtime-soa "^runtime-soa.*"
+
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-maven-plugins "^build/tycho-plugins.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-build "^build/parent.*|^build/target-platform.*|^build/target-platforms.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-build-sites "^build/aggregate.*|^build/results.*"
+python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-build-continous "^build/util.*|^build/emma.*|^build/jacoco.*"
+
+
+python filter_tests.py $ORIGINAL_REPO $NEWROOT/jbosstools-integration-tests 
 
 cd $NEWROOT
 
