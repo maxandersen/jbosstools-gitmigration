@@ -19,7 +19,7 @@ total_commits = get_commit_count(source_repo)
 object_count = 0
 commit_count = 0
 
-global_exclude = re.compile("^documentation/qa.*|^documentation/development.*|^xulrunner2.*")
+global_exclude = re.compile("^documentation/qa.*|^documentation/development.*|^xulrunner2.*|.*.wnk|.*.swf")
 
 def print_progress():
   global object_count, commit_count, total_objects, total_commits

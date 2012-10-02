@@ -13,9 +13,12 @@ if [ -z "$GITHUBPWD" ]
 fi
 
 # create in own user
-export GHROOT=${GITHUB_ROOT:-user/repos}
+#export GHROOT=${GITHUB_ROOT:-user/repos}
 # create in jbosstools organization
-#export GITHUB_ROOT orgs/jbosstools/repos
+export GHROOT=orgs/jbosstools/repos
 
-JSON="{\"name\":\"scratch-$1\", \"description\":\"scratch test repo for $1 svn-git migration\"}"
+JSON="{\"name\":\"$1\", \"description\":\"$2 repo for $1 svn-git migration\"}"
 curl -u "$GITHUBUSER:$GITHUBPWD" https://api.github.com/$GHROOT -d "$JSON"
+
+#delete repos
+#find jbosstools-* -maxdepth 0 | xargs -n 1 -I {} curl -u "maxandersen:$GITHUBPWD" https://api.github.com/repos/maxandersen/temp-{} -X DELETE
