@@ -6,11 +6,12 @@ from git_fast_filter import get_commit_count, get_total_objects
 import re
 import datetime
 
-if len(sys.argv) != 4:
-  raise SystemExit("Syntax:\n  %s SOURCE_REPO TARGET_REPO REGULAR_EXP_FILTER")
+if len(sys.argv) != 5:
+  raise SystemExit("Syntax:\n  %s SOURCE_REPO TARGET_REPO REGULAR_EXP_INCLUDE REGULAR_EXP_EXCLUDE")
 source_repo = sys.argv[1]
 target_repo = sys.argv[2]
-regexp = re.compile(sys.argv[3])
+exclude = re.compile(sys.argv[3])
+include = re.compile(sys.argv[4])
 
 start = datetime.datetime.now()
 
@@ -18,8 +19,6 @@ total_objects = get_total_objects(source_repo)  # blobs + trees
 total_commits = get_commit_count(source_repo)
 object_count = 0
 commit_count = 0
-
-global_exclude = re.compile("^documentation/qa.*|^documentation/development.*|^xulrunner2.*|.*.wnk|.*.swf")
 
 def print_progress():
   global object_count, commit_count, total_objects, total_commits
@@ -37,9 +36,9 @@ def my_commit_callback(commit):
   print_progress()
   new_file_changes = []
   for change in commit.file_changes:
-    if global_exclude.match(change.filename):
+    if exclude.match(change.filename):
       pass
-    elif regexp.match(change.filename):
+    elif include.match(change.filename):
       new_file_changes.append(change)
       #print commit.branch + ":" + change.filename
 
