@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Good practices for Git, pushes, and branches?</title>
+<style type="text/css">
+body, td{font-family:arial,sans-serif;font-size:13px} a:link, a:active {color:#1155CC; text-decoration:none} a:hover {text-decoration:underline; cursor: pointer} a:visited{color:##6611CC} img{border:0px} pre { white-space: pre; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; white-space: pre-wrap; word-wrap: break-word; width: 800px; overflow: auto;}
+</style>
+</head>
+<body>
+<div class="bodycontainer">
+
+<hr>
+<div class="maincontent">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td>
+<font size="+1">
+<b>Good practices for Git, pushes, and branches?</b></font><br>
+</td>
+</tr>
+</tbody></table>
+<hr>
+<table class="message" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">
+<table border="0" cellpadding="12" cellspacing="0" width="100%">
+<tbody><tr>
+<td>
+<font size="-1">
+<div bgcolor="#FFFFFF" text="#000000">
+
+
+<div style="font-family:sans-serif!important">
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:dmison@redhat.com" target="_blank">Darrin Mison</a></span></b><br>
+<span style="color:#666">September 26</span></div>
+<div style="color:#666"><br>
+As an occasional project contributor on github, I've always
+created my own branch to send my pull request from. &nbsp; (not sure
+where I picked that up from)
+<div><br>
+</div>
+<div>
+<div>Is this a good practice?</div>
+<div><br>
+</div>
+<div>Or am I creating more work for people?</div>
+<div><br>
+</div>
+<div>Having never been on the receiving end of pull-requests
+I'm not sure of the pros and cons of such an approach. &nbsp;</div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#9ec269!important;text-decoration:none!important;font-weight:bold" href="mailto:dcampos@redhat.com" target="_blank">Douglas Campos</a></span></b><br>
+<span style="color:#666">September 26</span></div>
+<div style="color:#666">
+<pre>yup, good practice in general
+
+On Sep 27, 2012, at 1:32 AM, Darrin Mison wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>As an occasional project contributor on github, I've always created my own branch to send my pull request from.   (not sure where I picked that up from)
+
+Is this a good practice?
+
+Or am I creating more work for people?
+
+Having never been on the receiving end of pull-requests I'm not sure of the pros and cons of such an approach.
+
+-- Darrin Mison
+</pre>
+</blockquote>
+
+
+
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:dmison@redhat.com" target="_blank">Darrin Mison</a></span></b><br>
+<span style="color:#666">September 26</span></div>
+<div style="color:#666"><br>
+opps, I forgot to specifically ask "why" - as in what problems
+does it avoid.
+<div><br>
+</div>
+<div><br>
+<div>
+<div>On 27/09/2012, at 2:41 PM, Douglas Campos wrote:</div>
+<br>
+<blockquote type="cite">yup, good practice in general<br>
+<br>
+On Sep 27, 2012, at 1:32 AM, Darrin Mison wrote:<br>
+<br>
+<blockquote type="cite">As an occasional project
+contributor on github, I've always created my own branch
+to send my pull request from. &nbsp;&nbsp;(not sure where I picked
+that up from)<br>
+<br>
+Is this a good practice?<br>
+<br>
+Or am I creating more work for people?<br>
+<br>
+Having never been on the receiving end of pull-requests
+I'm not sure of the pros and cons of such an approach. &nbsp;<br>
+
+
+ 
+
+
+
+<br>
+</blockquote>
+<br>
+-- qmx<br>
+<br>
+</blockquote>
+</div>
+<br>
+</div>
+
+
+
+
+
+
+
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#9ec269!important;text-decoration:none!important;font-weight:bold" href="mailto:dcampos@redhat.com" target="_blank">Douglas Campos</a></span></b><br>
+<span style="color:#666">September 26</span></div>
+<div style="color:#666">
+<pre>let's say you cloned from repo1, branch master
+
+then you put your changes on master
+
+opens the pull request
+
+while you were messing with it, they did more stuff on their master
+
+later they integrate your change
+
+for you to get the updates, you'll need to do a merge (or rebase) - something that you wouldn't need to do if you used a branch in the beginning
+
+so, absolutely no burden on the receiving side, but harder for you to keep your master history identical to the "upstream" repo
+
+TL;DR: branches are cheap, use them at will :)
+
+On Sep 27, 2012, at 1:43 AM, Darrin Mison wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>opps, I forgot to specifically ask "why" - as in what problems does it avoid.
+
+
+On 27/09/2012, at 2:41 PM, Douglas Campos wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>yup, good practice in general
+
+On Sep 27, 2012, at 1:32 AM, Darrin Mison wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>As an occasional project contributor on github, I've always created my own branch to send my pull request from.   (not sure where I picked that up from)
+
+Is this a good practice?
+
+Or am I creating more work for people?
+
+Having never been on the receiving end of pull-requests I'm not sure of the pros and cons of such an approach. 
+
+-- Darrin Mison 
+</pre>
+</blockquote>
+<pre>
+-- qmx
+
+</pre>
+</blockquote>
+
+</blockquote>
+</div>
+</div>
+</div>
+</font>
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+</div>
+</div>
+
+
+</body></html>
