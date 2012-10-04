@@ -10,17 +10,17 @@ See FAQ.md for questions concerning the migration.
 1) git clone mirror repo to get all branches lcoal and use the
 readonly url to avoid being able to mirror back.
 
-      $ git clone git://github.com/jbosstools/jbosstools-svn-mirror.git
+      $ git clone git://github.com/jbosstools/jbosstools-full-svn-mirror.git
       $ cd jbosstools-svn-mirro && git pull --all
       $ git branch -m trunk master
 
 2) Backup local repo for reuse later
 
-      $ tar -czvf jbosstools-svn-mirror.tar.gz jbosstools-svn-mirror
+      $ tar -czvf jbosstools-full-svn-mirror.tar.gz jbosstools-full-svn-mirror
  
    To get a clean copy:
 
-      $ tar -xvf jbosstools-svn-mirror.tar.gz
+      $ tar -xvf jbosstools-full-svn-mirror.tar.gz
       
 3) Enter the new copy folder, and clean out all but the content we care about
 
@@ -39,7 +39,7 @@ readonly url to avoid being able to mirror back.
 5) Convert branch svn tags into real tags
 
       # make a tag of each branch in tags/*
-      $ git branch | grep tags | sed -e "s/tags\///g" | xargs -n 1 -I {} git tag -m "svn branch tag" {} tags/{}
+      $      git branch | grep tags | sed -e "s/tags\///g" | xargs -n 1 -I {} git tag -m "svn branch tag" {} tags/{}
       # delete all branches in tags/*
       $ git branch | grep tags | xargs -n 1 git branch -d 
       # you can ignore warning: deleting branch '<tagname>' that has been merged to '<tagname>', but not yet been merged to HEAD.
