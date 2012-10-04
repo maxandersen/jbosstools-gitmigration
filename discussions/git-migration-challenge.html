@@ -1,0 +1,2450 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Git Migration Challenge</title>
+<style type="text/css">
+body, td{font-family:arial,sans-serif;font-size:13px} a:link, a:active {color:#1155CC; text-decoration:none} a:hover {text-decoration:underline; cursor: pointer} a:visited{color:##6611CC} img{border:0px} pre { white-space: pre; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; white-space: pre-wrap; word-wrap: break-word; width: 800px; overflow: auto;}
+</style>
+</head>
+<body>
+<div class="bodycontainer">
+
+<hr>
+<div class="maincontent">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td>
+<font size="+1">
+<b>Git Migration Challenge</b></font><br>
+</td>
+</tr>
+</tbody></table>
+<hr>
+<table class="message" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td colspan="2">
+<table border="0" cellpadding="12" cellspacing="0" width="100%">
+<tbody><tr>
+<td>
+<font size="-1">
+<div bgcolor="#FFFFFF" text="#000000">
+<div style="font-family:sans-serif!important">
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 13</span></div>
+<div style="color:#666">
+<pre>Hey,
+
+we are looking at migrating jbosstools from svn and in that process splitting up into smaller git repositories.
+
+We already reduced the history (5 years cut out, leaving just 2) greatly in the our svn-git mirror at <a target="_blank" href="https://github.com/jbosstools/jbosstools-svn-mirror">https://github.com/jbosstools/jbosstools-svn-mirror</a>,
+but even with that trying to use filter-branch to split up the repo is taking forever even for "small parts".
+
+Anyone with tips on speeding this up or is 4-6 days of migration where SVN have to be locked down for everyone the only way forward ?
+
+Or should we bite the bullet and just take tip of trunk and keep svn as the archive and old-maintancne place ?
+
+Any recommendations/suggestions very welcome!
+
+/max
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#69c2ac!important;text-decoration:none!important;font-weight:bold" href="mailto:dcampos@redhat.com" target="_blank">Douglas Campos</a></span></b><br>
+<span style="color:#666">September 13</span></div>
+<div style="color:#666">
+<pre>
+On Sep 13, 2012, at 4:52 PM, Max Rydahl Andersen wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>Hey,
+
+we are looking at migrating jbosstools from svn and in that process splitting up into smaller git repositories.
+
+We already reduced the history (5 years cut out, leaving just 2) greatly in the our svn-git mirror at <a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a>,
+but even with that trying to use filter-branch to split up the repo is taking forever even for "small parts".
+
+Anyone with tips on speeding this up or is 4-6 days of migration where SVN have to be locked down for everyone the only way forward ?
+</pre>
+</blockquote>
+<pre>- do a svndump of the repo (standard dump file)
+- use a beefy EC2 instance for that migration (high-IO machines)
+- make a local repo on that machine (svnadmin load &lt;path/to/dump/file&gt;)
+- migrate to the git repo (git svn clone -s <a>file:///</a>....)
+- use one copy of the repo for each dir "to be split"
+
+push it after done
+
+note that a huge history will consume tons of RAM, so the big machine is really important
+
+</pre>
+<blockquote type="cite">
+<pre>
+Or should we bite the bullet and just take tip of trunk and keep svn as the archive and old-maintancne place ?
+
+Any recommendations/suggestions very welcome!
+
+/max
+</pre>
+</blockquote>
+<pre>
+-- qmx
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#66b7ed!important;text-decoration:none!important;font-weight:bold" href="mailto:jporter@redhat.com" target="_blank">Jason Porter</a></span></b><br>
+<span style="color:#666">September 13</span></div>
+<div style="color:#666">
+<pre>Have you looked at <a href="http://www.catb.org/%7Eesr/reposurgeon/reposurgeon.html" target="_blank">http://www.catb.org/~esr/reposurgeon/reposurgeon.html</a> ? There may be something there that can help. If not, Douglass's idea is probably pretty good if you want to keep the history, otherwise just go with HEAD.
+
+On Thurs, Sept 13, 2012 at 1:52:07 PM, Max Rydahl Andersen wrote:
+</pre>
+<blockquote type="cite">
+<pre>
+Hey,
+
+we are looking at migrating jbosstools from svn and in that process
+splitting up into smaller git repositories.
+
+We already reduced the history (5 years cut out, leaving just 2)
+greatly in the our svn-git mirror at
+<a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a>,
+but even with that trying to use filter-branch to split up the repo
+is taking forever even for "small parts".
+
+Anyone with tips on speeding this up or is 4-6 days of migration
+where SVN have to be locked down for everyone the only way forward ?
+
+Or should we bite the bullet and just take tip of trunk and keep svn
+as the archive and old-maintancne place ?
+
+Any recommendations/suggestions very welcome!
+
+/max
+</pre>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#668ced!important;text-decoration:none!important;font-weight:bold" href="mailto:david.lloyd@redhat.com" target="_blank">David M. Lloyd</a></span></b><br>
+<span style="color:#666">September 13</span></div>
+<div style="color:#666"><br>
+On 09/13/2012 02:52 PM, Max Rydahl Andersen wrote:<br>
+<blockquote type="cite">Hey,<br>
+<br>
+we are looking at migrating jbosstools from svn and in that
+progress splitting up into smaller git repositories.<br>
+<br>
+We already reduced the history (5 years cut out, leaving just
+2) greatly in the our svn-git mirror at
+<a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a>,<br>
+but even with that trying to use filter-branch to split up the
+repo is taking forever even for "small parts".<br>
+<br>
+Anyone with tips on speeding this up or is 4-6 days of
+migration where SVN have to be locked down for everyone the
+only way forward ?<br>
+</blockquote>
+<br>
+IIRC it doesn't *have* to be locked down - you can incrementally
+"catch <br>
+up" your repositories and have a single cutover event, if you're
+careful.<br>
+<br>
+Also - you *should not* split your repository unless you plan to
+<br>
+independently maintain/version/release the components.&nbsp; Git
+submodule <br>
+support is pointless and complex.&nbsp; (This is just based on my own
+<br>
+personal experience; some people might like it.&nbsp; BUT THEY'RE
+WRONG!!)<br>
+<br>
+<blockquote type="cite">Or should we bite the bullet and just
+take tip of trunk and keep svn as the archive and
+old-maintancne place ?<br>
+<br>
+Any recommendations/suggestions very welcome!<br>
+<br>
+/max<br>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#69c2ac!important;text-decoration:none!important;font-weight:bold" href="mailto:dcampos@redhat.com" target="_blank">Douglas Campos</a></span></b><br>
+<span style="color:#666">September 13</span></div>
+<div style="color:#666">
+<pre>
+On Sep 13, 2012, at 5:55 PM, David M. Lloyd wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>On 09/13/2012 02:52 PM, Max Rydahl Andersen wrote:
+</pre>
+<blockquote type="cite">
+<pre>Hey,
+
+we are looking at migrating jbosstools from svn and in that process splitting up into smaller git repositories.
+
+We already reduced the history (5 years cut out, leaving just 2) greatly in the our svn-git mirror at <a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a>,
+but even with that trying to use filter-branch to split up the repo is taking forever even for "small parts".
+
+Anyone with tips on speeding this up or is 4-6 days of migration where SVN have to be locked down for everyone the only way forward ?
+</pre>
+</blockquote>
+<pre>
+IIRC it doesn't *have* to be locked down - you can incrementally "catch up" your repositories and have a single cutover event, if you're careful.
+</pre>
+</blockquote>
+<pre>for the split is kinda unavoidable as it makes things more complicated to sync ;)
+</pre>
+<blockquote type="cite">
+<pre>
+Also - you *should not* split your repository unless you plan to independently maintain/version/release the components.  Git submodule support is pointless and complex.  (This is just based on my own personal experience; some people might like it.  BUT THEY'RE WRONG!!)
+</pre>
+</blockquote>
+<pre>having several small repos versioned independently made my life way less painful in all the cases, and agree that submodules are a mess
++9001
+</pre>
+<blockquote type="cite">
+<pre>
+</pre>
+<blockquote type="cite">
+<pre>Or should we bite the bullet and just take tip of trunk and keep svn as the archive and old-maintancne place ?
+
+Any recommendations/suggestions very welcome!
+
+/max
+</pre>
+</blockquote>
+<pre>
+-- 
+- DML
+</pre>
+</blockquote>
+<pre>
+-- qmx
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#8866ed!important;text-decoration:none!important;font-weight:bold" href="mailto:jason.greene@redhat.com" target="_blank">Jason T. Greene</a></span></b><br>
+<span style="color:#666">September 13</span></div>
+<div style="color:#666">
+<pre>
+On Sep 13, 2012, at 3:00 PM, Douglas Campos wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>
+On Sep 13, 2012, at 4:52 PM, Max Rydahl Andersen wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>Hey,
+
+we are looking at migrating jbosstools from svn and in that process splitting up into smaller git repositories.
+
+We already reduced the history (5 years cut out, leaving just 2) greatly in the our svn-git mirror at <a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a>,
+but even with that trying to use filter-branch to split up the repo is taking forever even for "small parts".
+
+Anyone with tips on speeding this up or is 4-6 days of migration where SVN have to be locked down for everyone the only way forward ?
+</pre>
+</blockquote>
+<pre>- do a svndump of the repo (standard dump file)
+- use a beefy EC2 instance for that migration (high-IO machines)
+- make a local repo on that machine (svnadmin load &lt;path/to/dump/file&gt;)
+- migrate to the git repo (git svn clone -s <a>file:///.…</a>)
+</pre>
+</blockquote>
+<pre>
+If you are locking down, its faster if you also add --no-metadata. 
+
+</pre>
+<blockquote type="cite">
+<pre>- use one copy of the repo for each dir "to be split"
+
+push it after done
+
+note that a huge history will consume tons of RAM, so the big machine is really important
+
+</pre>
+<blockquote type="cite">
+<pre>
+Or should we bite the bullet and just take tip of trunk and keep svn as the archive and old-maintancne place ?
+
+Any recommendations/suggestions very welcome!
+
+/max
+</pre>
+</blockquote>
+<pre>
+-- qmx
+</pre>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre></pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>
+Anyone with tips on speeding this up or is 4-6 days of migration where SVN have to be locked down for everyone the only way forward ?
+</pre>
+</blockquote>
+<pre>- do a svndump of the repo (standard dump file)
+- use a beefy EC2 instance for that migration (high-IO machines)
+- make a local repo on that machine (svnadmin load &lt;path/to/dump/file&gt;)
+- migrate to the git repo (git svn clone -s <a>file:///</a>....)
+- use one copy of the repo for each dir "to be split"
+
+push it after done
+</pre>
+</blockquote>
+<pre>
+Yes, that is what we got at <a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a> and it is being kept uptodate every 5 minutes
+but it is a 1.2 GB raw repo. 
+
+</pre>
+<blockquote type="cite">
+<pre>note that a huge history will consume tons of RAM, so the big machine is really important
+</pre>
+</blockquote>
+<pre>
+yeah, it took me close to a week to get it converted on a dedicated box.
+
+...now need to split it up to avoid git being almost as slow as svn ;)
+
+/max
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre></pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>We already reduced the history (5 years cut out, leaving just 2) greatly in the our svn-git mirror at <a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a>,
+but even with that trying to use filter-branch to split up the repo is taking forever even for "small parts".
+
+Anyone with tips on speeding this up or is 4-6 days of migration where SVN have to be locked down for everyone the only way forward ?
+</pre>
+</blockquote>
+<pre>
+IIRC it doesn't *have* to be locked down - you can incrementally "catch up" your repositories and have a single cutover event, if you're careful.
+</pre>
+</blockquote>
+<pre>
+Yes, right now we got the git mirror - its kept in sync and if we wanted to I could cut the connection to svn at anytime but I would be sitting with a
+repo that is *huge* and everyone is forced to spend ~1 hr  to checkout (vs ~8 hours in svn), but with svn you could just checkout the individual subparts
+you needed - with git thats not possible....leaving us with this challenge.
+
+</pre>
+<blockquote type="cite">
+<pre>Also - you *should not* split your repository unless you plan to independently maintain/version/release the components.  
+</pre>
+</blockquote>
+<pre>
+I've gone through this in my head again and again and yes, I'm not doing this split just to just get more repositories and make life hard.
+We got ~40 subprojects in the svn repo, and technically they could be released on their  own but we would end up with more repositories
+than developers around to maintain/branch/tag them.
+
+Hence why we took a good look at which modules have high interconnection and developed by which group of people and instead of 40 repos
+we would end up with ~8 "clusters" of modules each put into one repo. Details at <a href="https://issues.jboss.org/browse/JBIDE-12475" target="_blank">https://issues.jboss.org/browse/JBIDE-12475</a>, with a partial image at <a href="https://issues.jboss.org/secure/attachment/12356737/12356737_Components-Final+.png" target="_blank">https://issues.jboss.org/secure/attachment/12356737/12356737_Components-Final+.png</a>)
+
+</pre>
+<blockquote type="cite">
+<pre>Git submodule support is pointless and complex.  (This is just based on my own personal experience; some people might like it.  BUT THEY'RE WRONG!!)
+</pre>
+</blockquote>
+<pre>
+Yeah, git submodule does not look like being good enough for day-2-day use but it does have one nice usecase and that is to use a
+git-submodule repo as defining which version of the many repos the weekly integration build should be using.
+
+/max
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#cb66ed!important;text-decoration:none!important;font-weight:bold" href="mailto:hbraun@redhat.com" target="_blank">Heiko Braun</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666"><br>
++1
+<div><br>
+</div>
+<div>I havent seen a single successful migration that kept the
+svn history.</div>
+<div><br>
+<div>
+<div>On Sep 13, 2012, at 9:52 PM, Max Rydahl Andersen wrote:</div>
+<br>
+<blockquote type="cite"><span style="font-family:Helvetica;font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:normal;text-align:-webkit-auto;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;display:inline!important;float:none">Or should we bite the bullet
+and just take tip of trunk and keep svn as the archive
+and old-maintancne place ?</span></blockquote>
+</div>
+</div>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre>
+On 14 Sep 2012, at 08:55, Heiko Braun wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>
++1
+
+I havent seen a single successful migration that kept the svn history.
+</pre>
+</blockquote>
+<pre>
+Do you have examples of bad migrations ? :)
+
+/max
+</pre>
+<blockquote type="cite">
+<pre>
+On Sep 13, 2012, at 9:52 PM, Max Rydahl Andersen wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>Or should we bite the bullet and just take tip of trunk and keep svn as the archive and old-maintancne place ?
+</pre>
+</blockquote>
+<pre>
+</pre>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed66d9!important;text-decoration:none!important;font-weight:bold" href="mailto:gdesmet@redhat.com" target="_blank">Geoffrey De Smet</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666"><br>
+<div>Op 14-09-12 08:55, Heiko Braun
+schreef:<br>
+</div>
+<blockquote type="cite">
+<br>
++1<br>
+<div><br>
+</div>
+<br>
+<div>I havent seen a single successful migration that kept the
+svn<br>
+history.</div>
+<br>
+</blockquote>
+<br>
+We kept all svn history, branches and tags of drools :)<br>
+<br>
+Heck, later, we even split up the single git repo into smaller
+git<br>
+repo's to separate out planner, guvnor, eclipse-tools etc<br>
+and still kept the history and branches, but lost the tags at
+that<br>
+point.<br>
+<br>
+I 'll see if I can find my how-did-I-do-it-text (if I still
+got it)<br>
+and mail it to this thread.<br>
+<br>
+With kind regards,<br>
+Geoffrey De Smet<br>
+<div><br>
+<div><br>
+<div>On Sep 13, 2012, at 9:52 PM, Max Rydahl Andersen wrote:<u></u></div>
+<blockquote type="cite"><span>Or should<br>
+we bite the bullet and just take tip of trunk and
+keep svn<br>
+as the archive and old-maintancne place ?</span></blockquote>
+</div>
+</div>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed66d9!important;text-decoration:none!important;font-weight:bold" href="mailto:gdesmet@redhat.com" target="_blank">Geoffrey De Smet</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666"><br>
+<div>I can't find the document any more,
+so<br>
+I 'll just type down what I recall from the svn2git procedure:<br>
+<ul>
+<br>
+<li>svn drools was freaking large.</li>
+<br>
+<ul>
+<br>
+<li>It took about a week to run "git svn fetch"</li>
+<br>
+<li>The git repo was over 2GB after migration, mostly
+because<br>
+people had checked in lots of jars in the early days.</li>
+<br>
+<ul>
+<br>
+<li>During the "splitup procedure" (which was done
+later), I<br>
+modified the history to remove all those jars from the<br>
+repo's history.</li>
+<br>
+</ul>
+<br>
+</ul>
+<br>
+<li>You really want to use the authors.txt file to map svn<br>
+usernames to git fullName&lt;e-mail&gt;</li>
+<br>
+<ul>
+<br>
+<li>Important note: the github usernames are irrelevant!</li>
+<br>
+<ul>
+<br>
+<li>Git's history is based on fullName + e-mail. There
+is no<br>
+such thing as a git username. There is no such thing
+as a<br>
+github username in a git repo.<br>
+</li>
+<br>
+<li>Github's username is mapped to a git e-mail and does
+all<br>
+it's magic that way (authorization, link in webpages,
+...)<br>
+</li>
+<br>
+</ul>
+<br>
+</ul>
+<br>
+<li>The authors.txt file is incomplete and it will crash
+"git<br>
+svn fetch".</li>
+<br>
+<ul>
+<br>
+<li>It reports what svn username mapping is missing.</li>
+<br>
+<ul>
+<br>
+<li>Find the guy's name/e-mail and add it</li>
+<br>
+<ul>
+<br>
+<li>Easiest way to find that is to use JIRA, because
+JIRA<br>
+username == svn username normally.</li>
+<br>
+</ul>
+<br>
+<li>Since you're late to the git party, the internal authors.txt
+file<br>
+will<br>
+have most entries already</li>
+<br>
+<ul>
+<br>
+<li>Add your missing entries to that wiki page when
+you're<br>
+done!</li>
+<br>
+</ul>
+<br>
+</ul>
+<br>
+</ul>
+<br>
+<li>"git svn fetch" will also crash because the network<br>
+connection won't last a week<br>
+</li>
+<br>
+<li>"git svn fetch" works incrementally: it does NOT restart<br>
+from scratch</li>
+<br>
+<ul>
+<br>
+<li>Just run it again and it starts from the last
+successful<br>
+migrated commit.<br>
+</li>
+<br>
+</ul>
+<br>
+</ul>
+<br>
+<p>Here's the 3 commands I used:</p>
+<ol>
+<li>git svn init --prefix=svn/ --stdlayout https://svn.jboss.org/repos/labs/labs/jbossrules/</li>
+<li>Download authors.txt containing the list of JBoss Community contributors to e-mail addresses</li>
+<li>git svn fetch --authors-file=/home/gdesmet/projects/jboss/svn2git-migration/authors.txt</li>
+</ol>
+<p>Note: if you tried any funky stuff like -r BASE:5000 your master will be pointing to r5000
+and you'll want to repoint that to HEAD of trunk
+</p>
+<br>
+<p>Of course, there's some fallout you need to clean up:<br>
+</p>
+<br>
+<ul>
+<br>
+<li>svn:ignores aren't automatically migrated. Use this
+commend<br>
+to get them too. Do this on every branch (although I<br>
+personally did it mostly manually):</li>
+<br>
+<ul>
+<br>
+<li>git svn create-ignore</li>
+<br>
+</ul>
+<br>
+<li>Git doesn't support empty dirs.</li>
+<br>
+<ul>
+<br>
+<li>Fix: create a .gitignore file in the empty dir with
+the<br>
+value:</li>
+<br>
+<ul>
+<br>
+<li>!.gitignore</li>
+<br>
+</ul>
+<br>
+</ul>
+<br>
+</ul>
+<br>
+<p><br>
+I hope this helps :) If you need more info about the splitup
+or<br>
+merge git repo's, ping me.<br>
+</p>
+<br>
+<div><br>
+<p>With kind regards,<br>
+Geoffrey De Smet</p>
+<br>
+</div>
+<br>
+Op 14-09-12 10:09, Geoffrey De Smet schreef:<br>
+</div>
+<br>
+<blockquote type="cite"><br>
+<div>I havent seen a single successful migration that kept
+the<br>
+svn history.</div>
+<br>
+<u></u></blockquote>
+<br>
+We kept all svn history, branches and tags of drools :)<br>
+<br>
+And for pressgang-tools, maven-jdocbook-plugin, ... too.<br>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:rgb(88,150,0)!important;text-decoration:none!important;font-weight:bold" href="mailto:pmuir@redhat.com" target="_blank">Pete Muir</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre>
+On 14 Sep 2012, at 07:25, Max Rydahl Andersen wrote:
+
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>Git submodule support is pointless and complex.  (This is just based on my own personal experience; some people might like it.  BUT THEY'RE WRONG!!)
+</pre>
+</blockquote>
+<pre>
+Yeah, git submodule does not look like being good enough for day-2-day use but it does have one nice usecase and that is to use a
+git-submodule repo as defining which version of the many repos the weekly integration build should be using.
+</pre>
+</blockquote>
+<pre>
+We use it for a similar thing - pulling in released versions of quickstarts and examples into the our awestruct site, to generate docs from. It's tricky to get working right, but it does work. SVN externals were much more robust.
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed66d9!important;text-decoration:none!important;font-weight:bold" href="mailto:gdesmet@redhat.com" target="_blank">Geoffrey De Smet</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666"><br>
+<div>About freezes:<br>
+<br>
+Op 14-09-12 10:42, Geoffrey De Smet schreef:<br>
+</div>
+<br>
+<blockquote type="cite"><br>
+<div>I can't find the document any
+more,<br>
+so I 'll just type down what I recall from the svn2git<br>
+procedure:<br>
+<ul>
+<br>
+<li>svn drools was freaking large.</li>
+<br>
+<ul>
+<br>
+<li>It took about a week to run "git svn fetch"</li>
+<br>
+</ul>
+<br>
+</ul>
+<br>
+</div>
+<br>
+</blockquote>
+<br>
+Because "git svn fetch" works incrementally, I ran it until just<br>
+before we froze the SVN repo, then ran it again, pushed the git
+repo<br>
+to github<br>
+and ended up <b>freezing the repo for just a few hours </b>on<br>
+Saturday (which could have been just a few minutes if it wasn't
+for<br>
+the sanity checks etc).<br>
+So, a dev list mail warned everyone to commit/push everything by<br>
+Friday evening and to pull the new git repo on Sunday morning.<br>
+<br>
+Later on, during the "split-up procedure", the freezing was done<br>
+differently and never on the entire repo:<br>
+We went from 1 git repo to several git repo's. About every 2
+days, a<br>
+repo was split off.<br>
+So on the dev list I warned something like: subdir guvnor is
+going<br>
+to be split off on Wednesday, push all changes by Tuesday
+evening.<br>
+First thing I did on Wednesday was to delete that subdir guvnor
+and<br>
+push it to the old repo.<br>
+Then I migrated it the subdir guvnor to it's own repo (including
+all<br>
+former names of guvnor) and by Wendesday evening it was only and<br>
+devs could pull it out.<br>
+<br>
+Both procedures went relatively painless, probably because of
+the<br>
+lots of warnings on the dev list :)<br>
+<br>
+With kind regards,<br>
+Geoffrey De Smet<br>
+<blockquote type="cite"><br>
+<div>Op 14-09-12 08:55, Heiko Braun schreef:<br>
+</div>
+<br>
+<div>I havent seen a single successful migration that kept
+the<br>
+svn history.</div>
+<br>
+<u></u></blockquote>
+<br>
+We kept all svn history, branches and tags of drools :)<br>
+</blockquote>
+<br>
+And for pressgang-tools, maven-jdocbook-plugin, ... too.<br>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre>
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>I can't find the document any more, so I 'll just type down what I recall from the svn2git procedure:
+	• svn drools was freaking large.
+		• It took about a week to run "git svn fetch"
+</pre>
+</blockquote>
+</blockquote>
+<pre>
+I had to do an svn mirror to make the git svn fetch not timeout - then it took a week or so when I ignored half our history.
+
+</pre>
+<blockquote type="cite">
+<pre>Because "git svn fetch" works incrementally, I ran it until just before we froze the SVN repo, then ran it again, pushed the git repo to github
+and ended up freezing the repo for just a few hours on Saturday (which could have been just a few minutes if it wasn't for the sanity checks etc).
+</pre>
+</blockquote>
+<pre>
+We already got this - its 1.2GB and its not really usable in its giant form.
+
+</pre>
+<blockquote type="cite">
+<pre>Later on, during the "split-up procedure", the freezing was done differently and never on the entire repo:
+We went from 1 git repo to several git repo's. About every 2 days, a repo was split off.
+</pre>
+</blockquote>
+<pre>
+How did you do this without loosing history and rewrite git repo history ?
+
+if we just remove it in master then the history is still bogging down the main git repo.
+ 
+</pre>
+<blockquote type="cite">
+<pre>So on the dev list I warned something like: subdir guvnor is going to be split off on Wednesday, push all changes by Tuesday evening.
+First thing I did on Wednesday was to delete that subdir guvnor and push it to the old repo.
+Then I migrated it the subdir guvnor to it's own repo (including all former names of guvnor) and by Wendesday evening it was only and devs could pull it out.
+</pre>
+</blockquote>
+<pre>
+How? and without changing/loosing the history ? 
+
+/max
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#668ced!important;text-decoration:none!important;font-weight:bold" href="mailto:david.lloyd@redhat.com" target="_blank">David M. Lloyd</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666"><br>
+I've done a few with history and a few without.&nbsp; All successful
+though.<br>
+<br>
+On 09/14/2012 01:55 AM, Heiko Braun wrote:<br>
+<blockquote type="cite"><br>
+<br>
++1<br>
+<br>
+I havent seen a single successful migration that kept the svn
+history.<br>
+<br>
+On Sep 13, 2012, at 9:52 PM, Max Rydahl Andersen wrote:<br>
+<br>
+<blockquote type="cite">Or should we bite the bullet and just
+take tip of trunk and keep svn<br>
+as the archive and old-maintancne place ?<br>
+</blockquote>
+<br>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed66d9!important;text-decoration:none!important;font-weight:bold" href="mailto:gdesmet@redhat.com" target="_blank">Geoffrey De Smet</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666"><br>
+<div>Op 14-09-12 13:12, Max Rydahl Andersen schreef:<br>
+</div>
+<br>
+<blockquote type="cite"><br>
+<blockquote type="cite"><br>
+<pre>I can't find the document any more, so I 'll just type down what I recall from the svn2git procedure:
+	• svn drools was freaking large.
+		• It took about a week to run "git svn fetch"
+</pre>
+<br>
+</blockquote>
+<br>
+</blockquote>
+<br>
+<pre>I had to do an svn mirror to make the git svn fetch not timeout - then it took a week or so when I ignored half our history.</pre>
+<br>
+<br>
+I also had timeouts all the time. Just start "git svn fetch"
+again,<br>
+it starts from where it left off (actually from the last
+atomically<br>
+migrated commit - so no corruption danger).<br>
+<br>
+Originally, I tried to get an svn mirror locally too, to avoid
+the<br>
+timeouts, but that just didn't work.<br>
+<blockquote type="cite"><br>
+<pre>Because "git svn fetch" works incrementally, I ran it until just before we froze the SVN repo, then ran it again, pushed the git repo to github
+and ended up freezing the repo for just a few hours on Saturday (which could have been just a few minutes if it wasn't for the sanity checks etc).
+</pre>
+<br>
+</blockquote>
+<br>
+<pre>We already got this - its 1.2GB and its not really usable in its giant form.</pre>
+<br>
+<br>
+Ours was 2.1GB (stuffed with jars from the early days of the<br>
+project)<br>
+github doesn't like a git repo above 2GB (it works, but not<br>
+decently).<br>
+<blockquote type="cite"><br>
+<pre>Later on, during the "split-up procedure", the freezing was done differently and never on the entire repo:
+We went from 1 git repo to several git repo's. About every 2 days, a repo was split off.
+</pre>
+<br>
+</blockquote>
+<br>
+<pre>How did you do this without loosing history and rewrite git repo history ?</pre>
+<br>
+<br>
+This is almost 2 years ago, I forgot the gory details,<br>
+but I 've copy pasted the text document that I used over
+and over<br>
+again for every git repo I split off and that made sense
+to me at<br>
+the time,<br>
+to the end of this mail. Maybe you find it inspirational
+:)<br>
+<br>
+The general idea is that you duplicate your git repo and
+delete all<br>
+the directories that are not part of your new smaller repo
+(both on<br>
+HEAD as in every single commit).<br>
+Then do this for every small repo until you've got
+everything. Make<br>
+one small repo "take the rest", so you don't lose any
+history for<br>
+sure (even if it's in the wrong repo).<br>
+The only pitfall is that for every directory that you want
+to split<br>
+off, you 'll want to know it's old names too. <br>
+<pre>
+if we just remove it in master then the history is still bogging down the main git repo.</pre>
+<br>
+<br>
+The main repo is thrown away, but do create 1 small repo
+that takes<br>
+the rest (=&gt; does excludes instead of includes).<br>
+If the other repo's done their job properly, that one
+should be<br>
+small too.<br>
+<pre> 
+</pre>
+<br>
+<blockquote type="cite"><br>
+<pre>So on the dev list I warned something like: subdir guvnor is going to be split off on Wednesday, push all changes by Tuesday evening.
+First thing I did on Wednesday was to delete that subdir guvnor and push it to the old repo.
+Then I migrated it the subdir guvnor to it's own repo (including all former names of guvnor) and by Wendesday evening it was only and devs could pull it out.
+</pre>
+<br>
+</blockquote>
+<br>
+<pre>How? and without changing/loosing the history ? </pre>
+<br>
+<br>
+Without loosing the history. The history does get
+changed, but in a<br>
+non-harmful way: <br>
+For example, suppose you split of guvnor and planner
+from drools:<br>
+myRepo<br>
+&nbsp;/drools<br>
+&nbsp;/guvnor<br>
+&nbsp;/planner<br>
+Now, suppose you had a commit "fix typo's in docs"
+that did changes<br>
+in each of these subdirectories.<br>
+Each of your 3 new repo's will now have a commit "fix
+typo's in<br>
+docs", each change only the files affected to their
+subdirectories.<br>
+However, a commit like "fix something for guvnor",
+that touched only<br>
+files in the guvnor subdirectory,<br>
+will not be in the history of the drools and planner
+repo, it will<br>
+only be in the guvnor repo history.<br>
+<br>
+Branches work too.<br>
+Tags can work (I didn't bother), but know that the
+tags can't be<br>
+build from source as the build scripts did rely on the
+other<br>
+directories being there.<br>
+So, do keep the old svn repo in archive mode - but at
+least history<br>
+in your IDE will work from git without having to go to
+the old svn<br>
+repo.<br>
+<br>
+With kind regards,<br>
+Geoffrey De Smet<br>
+<br>
+<pre>For future reference, I am copy-pasting the methodology I used during 
+the split-up in our dev mailing list archive.
+Just ignore it.
+
+However, do take a look at the blog about the split-up, which has some 
+interesting numbers:
+   <a href="http://blog.athico.com/2011/03/splitting-up-into-smaller-git.html" target="_blank">http://blog.athico.com/2011/03/splitting-up-into-smaller-git.html</a>
+
+<div>-- 
+With kind regards,
+Geoffrey De Smet
+
+<pre>
+split-up
+========
+
+Gather all in one directory
+---------------------------
+
+Comment out the modules with: &lt;!-- Already split-off to separate repo --&gt;
+Run a clean build: mvn clean install -DskipTests
+
+Commit with message: JBRULES-2869: Split-off preparation: move 
+everything for a separate repository together into a single directory
+
+Do split
+--------
+
+git clone git@github.com:droolsjbpm/droolsjbpm.git droolsjbpm-untouched
+cd droolsjbpm-untouched/
+git fetch
+git branch
+git pull --rebase
+cd ..
+cp -R droolsjbpm-untouched &lt;repoName&gt;-uncloned
+cd &lt;repoName&gt;-uncloned
+
+git remote rm origin
+git branch -a
+git tag -l
+git tag -d 3.0-GA
+git tag -d 3.0-GA@4643
+git tag -d 3.0.1-GA
+git tag -d 3.0.2-GA
+git tag -d 3.0.3-GA
+git tag -d 3.0.5-GA
+git tag -d 3.0.6-GA
+git tag -d 4.0.0.13773GA
+git tag -d 4.0.1.14754GA
+git tag -d 4.0.2-SOA_4.2.CP01
+git tag -d 4.0.2.15666.GA
+git tag -d 4.0.2.15830.SOA-4-2.CP01
+git tag -d 4.0.3.15993.GA
+git tag -d 4.0.4.17825GA
+git tag -d 4.0.5.19064GA
+git tag -d 4.0.6.19326.GA
+git tag -d 4.0.7.19894.GA
+git tag -d 5.0.0.26115.FINAL
+git tag -d 5.0.1.26597.FINAL
+git tag -d 5.1.0.34406.FINAL
+git tag -d 5.1.1.34858.FINAL
+git tag -d 5.2.0.M1
+git tag -d DROOLS_SOA_4_2_18483_GA
+git tag -d DROOLS_SOA_4_2_19342_CP1
+git tag -d DROOLS_SOA_4_2_19937_CP2
+git tag -d DROOLS_SOA_4_2_CR3_18258
+git tag -d before_merge_factsconstraint
+git tag -l
+
+Depending on the split-off:
+Canonical: git filter-branch --index-filter 'git ls-tree --name-only 
+--full-tree $GIT_COMMIT | grep -v "^\(\(\.git\)\|...\)$" | xargs -I {} 
+git rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all
+
+For planner
+-----------
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v 
+"^\(\(\.git\)\|\(drools\-docs\)\|\(drools-planner\)\|\(drools-solver\)\)$" 
+| xargs -I {} git rm --cached -r {}' --tag-name-filter cat --prune-empty 
+-- --all
+
+The list: drools-docs drools-planner drools-solver
+
+For tools
+---------
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v 
+"^\(\(\.git\)\|\(droolsjbpm\-tools\)\|\(drools\-ant\)\|\(drools\-eclipse\)\|\(drools\-ide\)\|\(drools\-ide\-feature\)\|\(drools\-ide\-test\)\|\(drools\-eclipse3\.2\)\|\(drools\-eclipse3\.3\)\)$" 
+| xargs -I {} git rm --cached -r {}' --tag-name-filter cat --prune-empty 
+-- --all
+
+The list: droolsjbpm-tools drools-ant drools-eclipse drools-ide 
+drools-ide-feature drools-ide-test drools-eclipse3.2 drools-eclipse3.3
+
+For guvnor
+----------
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v 
+"^\(\(\.git\)\|\(drools\-docs\)\|\(drools\-examples\)\|\(guvnor\)\|\(drools\-guvnor\)\|\(drools\-jbrms\)\|\(drools\-atom\)\|\(drools\-factconstraint\)\|\(drools\-ide\-common\)\|\(drools\-repository\)\|\(drools\-repository\-parent\)\)$" 
+| xargs -I {} git rm --cached -r {}' --tag-name-filter cat --prune-empty 
+-- --all
+
+The list: drools-docs drools-examples guvnor drools-guvnor drools-jbrms 
+drools-atom drools-factconstraint drools-ide-common drools-repository 
+drools-repository-parent
+
+Also remove the GWT generated binaries from the history:
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree -r 
+$GIT_COMMIT | grep --regex 
+"^.*/src/main/webapp/.*\(\(\.gwt\.rpc\)\|\(\.cache\.html\)\|\(\.cache\.js\)\|\(\.cache\.xml\)\)$" 
+| xargs -I {} git rm --cached {}' --tag-name-filter cat --prune-empty -- 
+--all
+
+The list: src/main/webapp/org.drools.guvnor.Guvnor/**/*.gwt.rpc 
+src/main/webapp/org.drools.guvnor.Guvnor/**/*.cache.html 
+src/main/webapp/org.drools.guvnor.Guvnor/**/*.cache.js 
+src/main/webapp/org.drools.guvnor.Guvnor/**/*.cache.xml
+
+For integration
+---------------
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v 
+"^\(\(\.git\)\|\(drools\-docs\)\|\(drools\-grid\)\|\(drools\-container\)\|\(drools\-spring\)\|\(drools\-seam\)\|\(drools\-camel\)\|\(drools\-server\)\|\(drools\-pipeline\)\|\(drools\-rhq\-plugin\)\|\(drools\-simulator\)\)$" 
+| xargs -I {} git rm --cached -r {}' --tag-name-filter cat --prune-empty 
+-- --all
+
+The list: drools-docs drools-grid drools-container drools-spring 
+drools-seam drools-camel drools-server drools-pipeline drools-rhq-plugin 
+drools-simulator
+
+For drools
+----------
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep 
+"^\(\(blog\)\|\(lib\)\|\(m2_repo\)\|\(repository\)\|\(drools\-flow\-compiler\)\|\(drools\-flow\-core\)\|\(drools\-flow\-persistence\-jpa\)\|\(drools\-process\)\|\(drools-planner\)\|\(drools-solver\)\|\(droolsjbpm\-tools\)\|\(drools\-ant\)\|\(drools\-eclipse\)\|\(drools\-ide\)\|\(drools\-ide\-feature\)\|\(drools\-ide\-test\)\|\(drools\-eclipse3\.2\)\|\(drools\-eclipse3\.3\)\|\(guvnor\)\|\(drools\-guvnor\)\|\(drools\-jbrms\)\|\(drools\-atom\)\|\(drools\-factconstraint\)\|\(drools\-ide\-common\)\|\(drools\-repository\)\|\(drools\-repository\-parent\)\|\(drools\-grid\)\|\(drools\-container\)\|\(drools\-spring\)\|\(drools\-seam\)\|\(drools\-camel\)\|\(drools\-server\)\|\(drools\-pipeline\)\|\(drools\-rhq\-plugin\)\|\(drools\-simulator\)\|\(drools\-api\)\|\(.*\.xml\)\|\(.*\.txt\)\|\(.*\.TXT\)\|\
+ (.*\.env\)\|\(.*\.sh\)\|\(.*\.properties\)\(\.gitignore\)\|\(src\)\|\(install\)\|\(osgi\-bundles\)\)$" 
+| xargs -I {} git rm --cached -r {}' --tag-name-filter cat --prune-empty 
+-- --all
+
+The list is NOT: blog lib m2_repo repository drools-flow-compiler 
+drools-flow-core drools-flow-persistence-jpa drools-process + rest of 
+other migrations also not except drools-examples and drools-docs
+
+For droolsjbpm-knowledge
+------------------------
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v 
+"^\(\(\.git\)\|\(drools\-docs\)\|\(drools\-api\)\)$" | xargs -I {} git 
+rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all
+
+The list: drools-docs drools-api
+
+For droolsjbpm-build-bootstrap
+----------
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v 
+"^\(\(\.git\)\|\(.*\.xml\)\|\(.*\.txt\)\|\(.*\.TXT\)\|\(.*\.env\)\|\(.*\.sh\)\|\(.*\.properties\)\(\.gitignore\)\)$" 
+| xargs -I {} git rm --cached -r {}' --tag-name-filter cat --prune-empty 
+-- --all
+
+The list: pom.xml README.txt LICENSE-ASL-2.0.txt eclipse-cleanup.xml 
+eclipse-code-style.xml
+
+For droolsjbpm-build-distribution
+---------------------------------
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v 
+"^\(\(\.git\)\|\(src\)\|\(install\)\|\(osgi\-bundles\)\)$" | xargs -I {} 
+git rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all
+
+The list: src install osgi-bundles
+
+Then continue with:
+-------------------
+
+cd ..
+git clone 
+file:///home/gdesmet/projects/jboss/split-up-migration/&lt;repoName&gt;-uncloned/ 
+&lt;repoName&gt;
+cd &lt;repoName&gt;
+git remote rm origin
+git remote add origin git@github.com:droolsjbpm/&lt;repoName&gt;.git
+git push --all
+
+After the migration
+===================
+
+Remove from monolithic-droolsjbpm
+---------------------------------
+
+Delete the directories split-off in the droolsjbpm repository.
+Comment out their &lt;module&gt; reference in the parent pom: &lt;!-- Already 
+split-off to separate repo --&gt;
+Run:
+mvn clean install -DskipTests
+
+Commit with message: JBRULES-2869: Split-off of module GGG into separate 
+git repository
+
+Clean up in new repository
+--------------------------
+
+Remove non-needed docs and examples dirs.
+
+Commit with message: JBRULES-2869: Split-off: remove directories from 
+docs and examples that do not belong in the repository
+
+Add license file
+----------------
+
+Copy the LICENSE-ASL-2.0.txt file
+
+Commit with message: JBRULES-2869: Split-off requires license file per repo
+
+Hook in multiproject
+--------------------
+
+Hook in the new multiproject parent pom.
+
+mvn clean install -DskipTests
+
+Commit with message: JBRULES-2869: Hook in the new multiproject as 
+parent after split-up
+
+dos2unix
+--------
+
+Run command:
+find . -type f -regex ".*\.java$" -and -not -path \*/\.git/\* -exec 
+dos2unix {} \;
+find . -type f -regex ".*\.xml$" -and -not -path \*/\.git/\* -exec 
+dos2unix {} \;
+find . -type f -not -path \*/\.git/\* -exec dos2unix {} \;
+Review files that you don't want to dos2unix
+
+Commit with message: JBRULES-2855 Dos2unix all source files (except .bat)
+
+Copyright javadoc
+-----------------
+
+Replace in all *.java files regex case sensitive:
+/\*\*\n \* Copyright
+with
+/*\n * Copyright
+
+Search in all files regex case sensitive:
+/\*\*\n \* Copyright
+
+Commit with message: JBRULES-2577 License headers in java files are not 
+valid javadocs and should not start with /**
+
+Remove all \t suffixes
+----------------------
+
+Replace in all *.java files regex case sensitive:
+([;\{\}])[\t ]+$
+with
+$1
+
+Commit with message: JBRULES-2855 Remove all trailing whitespace in java 
+files
+
+Tabs
+----
+
+Replace in all *.java/drl files regex case sensitive:
+\t
+with 4 spaces
+Or replace multiple times in all *.java/drl files regex case sensitive:
+^( *)\t
+with (without quotes) "$1    "
+
+Replace in all *.xml files regex case sensitive:
+\t
+with 2 spaces
+
+Search in all files regex:
+\t
+
+Commit with message: JBRULES-2855 Do not use tabs (\t) for indentation, 
+use spaces instead: 4 for java files, 2 for xml, 4 for drl
+
+Strip author
+------------
+
+Replace in all *.java files regex case sensitive:
+^ *\* +@author .*\n
+with nothing.
+
+Delete empty javadocs.
+Replace in all *.java files regex case sensitive:
+^ */\*\*\n( *\* *\n)* *\*/\n
+with nothing
+
+Delete trailing empty javadoc lines:
+Replace in all *.java files regex case sensitive:
+^( *\* *\n)+( *)\*/
+with
+$2*/
+
+Search in all files:
+author
+
+Commit with message: JBRULES-2895 Strip all author tags from java files 
+- For motivation see https://issues.jboss.org/browse/JBRULES-2895
+
+Rename to new directory structure
+---------------------------------
+
+Do renames
+
+Commit with message: JBRULES-2869: Rename to new directory structure 
+after split-up
+
+Add repository jboss public in main pom.xml:
+
+&lt;repositories&gt;
+&lt;!-- Bootstrap repository to locate the parent pom when the parent pom 
+has not been build locally. --&gt;
+&lt;repository&gt;
+&lt;id&gt;jboss-public-repository-group&lt;/id&gt;
+&lt;name&gt;JBoss Public Repository Group&lt;/name&gt;
+&lt;url&gt;http://repository.jboss.org/nexus/content/groups/public/&lt;/url&gt;
+&lt;layout&gt;default&lt;/layout&gt;
+&lt;releases&gt;
+&lt;enabled&gt;true&lt;/enabled&gt;
+&lt;updatePolicy&gt;never&lt;/updatePolicy&gt;
+&lt;/releases&gt;
+&lt;snapshots&gt;
+&lt;enabled&gt;true&lt;/enabled&gt;
+&lt;updatePolicy&gt;never&lt;/updatePolicy&gt;
+&lt;/snapshots&gt;
+&lt;/repository&gt;
+&lt;/repositories&gt;
+
+Commit with message: JBRULES-2869: Include bootstrap repository
+
+Configure hudson job
+--------------------
+
+TODO for planner and tools
+
+
+                 + mutliproject pom per repo
+                       # parent repository in it
+                       # correct parent pom path
+
+
+Failed alternatives
+===================
+
+Probably not needed:
+git checkout --track remotes/origin/3.0.x
+git checkout --track remotes/origin/4.0.x
+git checkout --track remotes/origin/4.1.x
+git checkout --track remotes/origin/5.0.x
+git checkout --track remotes/origin/5.1.x
+git checkout --track remotes/origin/5.2.0.M1.x
+git checkout --track remotes/origin/K200
+git checkout --track remotes/origin/lr_unlinking_20101116
+git checkout --track remotes/origin/persistence_refactor
+git checkout --track remotes/origin/rete_using_static_methods_aug2009
+git checkout master
+
+Alt 1:
+cp -R droolsjbpm-untouched drools-planner-uncloned
+cd drools-planner-uncloned
+git remote rm origin
+git remote -v
+git branch -D K200
+git branch -D lr_unlinking_20101116
+git branch -d persistence_refactor
+git branch -D rete_using_static_methods_aug2009
+git branch -d 3.0.x
+git filter-branch --subdirectory-filter drools-solver --tag-name-filter 
+cat 4.0.x
+git filter-branch --subdirectory-filter drools-solver --tag-name-filter 
+cat -f 4.1.x
+git filter-branch --subdirectory-filter drools-solver --tag-name-filter 
+cat -f 5.0.x
+git filter-branch --subdirectory-filter drools-planner --tag-name-filter 
+cat -f 5.1.x
+git filter-branch --subdirectory-filter drools-planner --tag-name-filter 
+cat -f 5.2.0.M1.x
+git filter-branch --subdirectory-filter drools-planner --tag-name-filter 
+cat -f master
+cd ..
+git clone 
+<a>file:///home/gdesmet/projects/jboss/split-up-migration/drools-planner-uncloned</a> 
+drools-planner
+cd drools-planner
+git checkout --track remotes/origin/4.0.x
+git checkout --track remotes/origin/4.1.x
+git checkout --track remotes/origin/5.0.x
+git checkout --track remotes/origin/5.1.x
+git checkout --track remotes/origin/5.2.0.M1.x
+git checkout master
+git remote rm origin
+git remote add origin git@github.com:droolsjbpm/drools-planner.git
+git push --all
+
+Alt 2:
+git clone --no-hardlinks 
+file:///home/gdesmet/projects/jboss/split-up-migration/droolsjbpm-untouched
+drools-planner-uncloned
+cd drools-planner-uncloned
+git remote rm origin
+git filter-branch --subdirectory-filter drools-planner -- --all
+git reset --hard
+git gc --prune
+cd ..
+git clone 
+file:///home/gdesmet/projects/jboss/split-up-migration/drools-planner-uncloned
+drools-planner
+cd drools-planner
+git remote rm origin
+git remote add origin git@github.com:droolsjbpm/drools-planner.git
+git push --all
+
+Alt 3:
+git filter-branch --tree-filter 'rm -Rf lib' -- --all
+
+for i in $(ls) ; do
+echo $i
+done
+
+git filter-branch --tree-filter "find . -not -regex '\.' -and -not 
+-regex '\./git.*' -and -not -regex '\./drools-planner.*' -and -not 
+-regex '\./drools-solver.*' -and -not -regex 
+'\./drools-docs/drools-docs-planner.*' -and -not -regex 
+'\./drools-docs/drools-docs-solver.*' -delete" --tag-name-filter cat 
+--prune-empty -- --all
+
+Alt 4:
+git remote rm origin
+git filter-branch --subdirectory-filter drools-planner --tag-name-filter 
+cat --prune-empty -- --all
+=&gt; anything before containing "drools-planner" stays as-is so it stays 1GB
+
+Alt 5:
+git remote rm origin
+git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch 
+lib drools-api drools-core drools-compiler' --tag-name-filter cat 
+--prune-empty -- --all
+
+Alt 6:
+git remote rm origin
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v "^\(\.git\)\|\(drools\-ant\)\|\(drools\-eclipse\)" 
+| xargs git rm -r --cached --ignore-unmatch {}' --prune-empty master
+-- --all
+
+Alt 7: =&gt; WINNER
+git remote rm origin
+git branch -a
+git branch -D 3.0.x
+git branch -D 4.0.x
+git branch -D 4.1.x
+git branch -D 5.0.x
+git branch -D 5.1.x
+git branch -D 5.2.0.M1.x
+git branch -D K200
+git branch -D lr_unlinking_20101116
+git branch -D persistence_refactor
+git branch -D rete_using_static_methods_aug2009
+git branch -a
+git tag -l
+git tag -d 3.0-GA
+git tag -d 3.0-GA@4643
+git tag -d 3.0.1-GA
+git tag -d 3.0.2-GA
+git tag -d 3.0.3-GA
+git tag -d 3.0.5-GA
+git tag -d 3.0.6-GA
+git tag -d 4.0.0.13773GA
+git tag -d 4.0.1.14754GA
+git tag -d 4.0.2-SOA_4.2.CP01
+git tag -d 4.0.2.15666.GA
+git tag -d 4.0.2.15830.SOA-4-2.CP01
+git tag -d 4.0.3.15993.GA
+git tag -d 4.0.4.17825GA
+git tag -d 4.0.5.19064GA
+git tag -d 4.0.6.19326.GA
+git tag -d 4.0.7.19894.GA
+git tag -d 5.0.0.26115.FINAL
+git tag -d 5.0.1.26597.FINAL
+git tag -d 5.1.0.34406.FINAL
+git tag -d 5.1.1.34858.FINAL
+git tag -d 5.2.0.M1
+git tag -d DROOLS_SOA_4_2_18483_GA
+git tag -d DROOLS_SOA_4_2_19342_CP1
+git tag -d DROOLS_SOA_4_2_19937_CP2
+git tag -d DROOLS_SOA_4_2_CR3_18258
+git tag -d before_merge_factsconstraint
+git tag -l
+git filter-branch --subdirectory-filter drools-planner --prune-empty master
+
+# extra guvnor step?
+
+cd ..
+git clone 
+file:///home/gdesmet/projects/jboss/split-up-migration/drools-planner-uncloned/
+drools-planner
+cd drools-planner
+git remote rm origin
+git remote add origin git@github.com:droolsjbpm/drools-planner.git
+git push --all
+
+Alt 8:
+git filter-branch --index-filter 'git ls-tree --name-only --full-tree 
+$GIT_COMMIT | grep -v "^\(\.git\)\|\(drools\-ant\)\|\(drools\-eclipse\)" 
+| xargs -0 -I {} git rm --cached --ignore-unmatch -r {}' --prune-empty 
+master
+
+Hickups
+-------
+
+Redo planner migration by starting from an earlier tree:
+git reset --hard 73add05c3fd74b3fdf4456055d486b7a7547c28b
+</div></pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#8866ed!important;text-decoration:none!important;font-weight:bold" href="mailto:jason.greene@redhat.com" target="_blank">Jason T. Greene</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre>I imported the entire Xerces history locally (which is over a million commits), the entire mojarra history (JSF), the entire jbossas history, etc (we chose to ditch it in 7 because it was essentially a rewrite anyway).
+
+It takes a little care but it is doable.
+
+On Sep 14, 2012, at 7:55 AM, David M. Lloyd wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>I've done a few with history and a few without.  All successful though.
+
+On 09/14/2012 01:55 AM, Heiko Braun wrote:
+</pre>
+<blockquote type="cite">
+<pre>
+
++1
+
+I havent seen a single successful migration that kept the svn history.
+
+On Sep 13, 2012, at 9:52 PM, Max Rydahl Andersen wrote:
+</pre>
+<blockquote type="cite">
+<pre>Or should we bite the bullet and just take tip of trunk and keep svn
+as the archive and old-maintancne place ?
+</pre>
+</blockquote>
+<pre>
+</pre>
+</blockquote>
+<pre>
+-- 
+- DML
+</pre>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre>lets make this clear: I ALREADY HAVE THE SVN GIT MIRROR  :)
+
+that is not the hard part.
+
+the hard part is the split of the repo - all attempts so far have been looking at several days/weeks of processing and since
+it requires rewrite of the githistory its not exactly trivial to let others work on those repo at the same time....which is necessary
+as long as we haven't splitted them up...a catch22.
+
+/max
+
+On 14 Sep 2012, at 15:46, Jason Greene wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>I imported the entire Xerces history locally (which is over a million commits), the entire mojarra history (JSF), the entire jbossas history, etc (we chose to ditch it in 7 because it was essentially a rewrite anyway).
+
+It takes a little care but it is doable.
+
+On Sep 14, 2012, at 7:55 AM, David M. Lloyd wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>I've done a few with history and a few without.  All successful though.
+
+On 09/14/2012 01:55 AM, Heiko Braun wrote:
+</pre>
+<blockquote type="cite">
+<pre>
+
++1
+
+I havent seen a single successful migration that kept the svn history.
+
+On Sep 13, 2012, at 9:52 PM, Max Rydahl Andersen wrote:
+</pre>
+<blockquote type="cite">
+<pre>Or should we bite the bullet and just take tip of trunk and keep svn
+as the archive and old-maintancne place ?
+</pre>
+</blockquote>
+<pre>
+</pre>
+</blockquote>
+<pre>
+-- 
+- DML
+</pre>
+</blockquote>
+<pre>
+
+</pre>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre></pre>
+<blockquote type="cite">
+<pre>Op 14-09-12 13:12, Max Rydahl Andersen schreef:
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>I can't find the document any more, so I 'll just type down what I recall from the svn2git procedure:
+	• svn drools was freaking large.
+		• It took about a week to run "git svn fetch"
+
+</pre>
+</blockquote>
+</blockquote>
+<pre>I had to do an svn mirror to make the git svn fetch not timeout - then it took a week or so when I ignored half our history.
+</pre>
+</blockquote>
+<pre>I also had timeouts all the time. Just start "git svn fetch" again, it starts from where it left off (actually from the last atomically migrated commit - so no corruption danger).
+</pre>
+</blockquote>
+<pre>
+yes, still it was taking too long.
+
+</pre>
+<blockquote type="cite">
+<pre>Originally, I tried to get an svn mirror locally too, to avoid the timeouts, but that just didn't work.
+</pre>
+</blockquote>
+<pre>
+I got it to work - that isn't the problem ;)
+
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>
+</pre>
+<blockquote type="cite">
+<pre>Because "git svn fetch" works incrementally, I ran it until just before we froze the SVN repo, then ran it again, pushed the git repo to github
+and ended up freezing the repo for just a few hours on Saturday (which could have been just a few minutes if it wasn't for the sanity checks etc).
+
+</pre>
+</blockquote>
+<pre>We already got this - its 1.2GB and its not really usable in its giant form.
+</pre>
+</blockquote>
+<pre>Ours was 2.1GB (stuffed with jars from the early days of the project)
+github doesn't like a git repo above 2GB (it works, but not decently).
+</pre>
+</blockquote>
+<pre>
+okey - great; now we are talking.
+
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>Later on, during the "split-up procedure", the freezing was done differently and never on the entire repo:
+We went from 1 git repo to several git repo's. About every 2 days, a repo was split off.
+
+</pre>
+</blockquote>
+<pre>How did you do this without loosing history and rewrite git repo history ?
+</pre>
+</blockquote>
+<pre>This is almost 2 years ago, I forgot the gory details,
+but I 've copy pasted the text document that I used over and over again for every git repo I split off and that made sense to me at the time,
+to the end of this mail. Maybe you find it inspirational :)
+
+The general idea is that you duplicate your git repo and delete all the directories that are not part of your new smaller repo (both on HEAD as in every single commit).
+</pre>
+</blockquote>
+<pre>
+yes, its the delete parts we are trying (to delete the history) and its taking *ages*.
+
+</pre>
+<blockquote type="cite">
+<pre>Then do this for every small repo until you've got everything. Make one small repo "take the rest", so you don't lose any history for sure (even if it's in the wrong repo).
+The only pitfall is that for every directory that you want to split off, you 'll want to know it's old names too. 
+</pre>
+</blockquote>
+<pre>
+trying to retain the old dir names...
+
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>if we just remove it in master then the history is still bogging down the main git repo.
+
+</pre>
+</blockquote>
+<pre>The main repo is thrown away, but do create 1 small repo that takes the rest (=&gt; does excludes instead of includes).
+If the other repo's done their job properly, that one should be small too.
+</pre>
+</blockquote>
+<pre>
+yes..but how ;)
+</pre>
+<blockquote type="cite">
+<pre>
+Depending on the split-off:
+Canonical: git filter-branch --index-filter 'git ls-tree --name-only 
+--full-tree $GIT_COMMIT | grep -v "^\(\(\.git\)\|...\)$" | xargs -I {} 
+git rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all
+</pre>
+</blockquote>
+<pre>
+this looks very much like the one we are trying - its ETA is 2 days for just one move/cleanup.
+
+You are making it sound like you could do your moves in much less time than that ?
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#668ced!important;text-decoration:none!important;font-weight:bold" href="mailto:david.lloyd@redhat.com" target="_blank">David M. Lloyd</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666"><br>
+You should be able to continue your split incrementally after
+the <br>
+initial work?&nbsp; In which case you just continually do the fetch
+from svn, <br>
+then the split, over and over until you're completely caught up,
+and <br>
+then you switch over with no downtime.<br>
+<br>
+I don't have the stuff in front of me but I'm *sure* this is
+possible to do.<br>
+<br>
+On 09/14/2012 09:52 AM, Max Rydahl Andersen wrote:<br>
+<blockquote type="cite">lets make this clear: I ALREADY HAVE THE
+SVN GIT MIRROR&nbsp; :)<br>
+<br>
+that is not the hard part.<br>
+<br>
+the hard part is the split of the repo - all attempts so far
+have been looking at several days/weeks of processing and
+since<br>
+it requires rewrite of the githistory its not exactly trivial
+to let others work on those repo at the same time....which is
+necessary<br>
+as long as we haven't splitted them up...a catch22.<br>
+<br>
+/max<br>
+<br>
+On 14 Sep 2012, at 15:46, Jason Greene wrote:<br>
+<br>
+<blockquote type="cite">I imported the entire Xerces history
+locally (which is over a million commits), the entire
+mojarra history (JSF), the entire jbossas history, etc (we
+chose to ditch it in 7 because it was essentially a rewrite
+anyway).<br>
+<br>
+It takes a little care but it is doable.<br>
+<br>
+On Sep 14, 2012, at 7:55 AM, David M. Lloyd wrote:<br>
+<br>
+<blockquote type="cite">I've done a few with history and a
+few without.&nbsp; All successful though.<br>
+<br>
+On 09/14/2012 01:55 AM, Heiko Braun wrote:<br>
+<blockquote type="cite"><br>
+<br>
++1<br>
+<br>
+I havent seen a single successful migration that kept
+the svn history.<br>
+<br>
+On Sep 13, 2012, at 9:52 PM, Max Rydahl Andersen wrote:<br>
+<br>
+<blockquote type="cite">Or should we bite the bullet and
+just take tip of trunk and keep svn<br>
+as the archive and old-maintancne place ?<br>
+</blockquote>
+<br>
+</blockquote>
+--<br>
+- DML<br>
+</blockquote>
+<br>
+</blockquote>
+<br>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#8866ed!important;text-decoration:none!important;font-weight:bold" href="mailto:jason.greene@redhat.com" target="_blank">Jason T. Greene</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre>Max are you having trouble splitting svn or splitting an already converted git repo?
+
+
+On Sep 14, 2012, at 9:58 AM, Max Rydahl Andersen wrote:
+
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>Op 14-09-12 13:12, Max Rydahl Andersen schreef:
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>I can't find the document any more, so I 'll just type down what I recall from the svn2git procedure:
+	• svn drools was freaking large.
+		• It took about a week to run "git svn fetch"
+
+</pre>
+</blockquote>
+</blockquote>
+<pre>I had to do an svn mirror to make the git svn fetch not timeout - then it took a week or so when I ignored half our history.
+</pre>
+</blockquote>
+<pre>I also had timeouts all the time. Just start "git svn fetch" again, it starts from where it left off (actually from the last atomically migrated commit - so no corruption danger).
+</pre>
+</blockquote>
+<pre>
+yes, still it was taking too long.
+
+</pre>
+<blockquote type="cite">
+<pre>Originally, I tried to get an svn mirror locally too, to avoid the timeouts, but that just didn't work.
+</pre>
+</blockquote>
+<pre>
+I got it to work - that isn't the problem ;)
+
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>
+</pre>
+<blockquote type="cite">
+<pre>Because "git svn fetch" works incrementally, I ran it until just before we froze the SVN repo, then ran it again, pushed the git repo to github
+and ended up freezing the repo for just a few hours on Saturday (which could have been just a few minutes if it wasn't for the sanity checks etc).
+
+</pre>
+</blockquote>
+<pre>We already got this - its 1.2GB and its not really usable in its giant form.
+</pre>
+</blockquote>
+<pre>Ours was 2.1GB (stuffed with jars from the early days of the project)
+github doesn't like a git repo above 2GB (it works, but not decently).
+</pre>
+</blockquote>
+<pre>
+okey - great; now we are talking.
+</pre>
+</blockquote></div></div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre>
+On 14 Sep 2012, at 16:59, David M. Lloyd wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>You should be able to continue your split incrementally after the initial work?  In which case you just continually do the fetch from svn, then the split, over and over until you're completely caught up, and then you switch over with no downtime.
+</pre>
+</blockquote>
+<pre>
+yes, I can see its doable but the timeperiod and the amount of possible errors that wont be seen and have to restart just seems...big.
+
+I need to look at Geoffrey's great notes to see if I can spot a difference.
+
+/max
+ 
+</pre>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre>
+On 14 Sep 2012, at 17:03, Jason Greene wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>Max are you having trouble splitting svn or splitting an already converted git repo?
+</pre>
+</blockquote>
+<pre>
+splitting already converted git repo (its continously being mirrored from svn right now)
+
+/max
+
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed66d9!important;text-decoration:none!important;font-weight:bold" href="mailto:gdesmet@redhat.com" target="_blank">Geoffrey De Smet</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666"><br>
+<blockquote type="cite">
+<blockquote type="cite">
+<blockquote type="cite">
+<blockquote type="cite">Later on, during the "split-up
+procedure", the freezing was done differently and never
+on the entire repo:<br>
+We went from 1 git repo to several git repo's. About
+every 2 days, a repo was split off.<br>
+<br>
+</blockquote>
+How did you do this without loosing history and rewrite
+git repo history ?<br>
+</blockquote>
+This is almost 2 years ago, I forgot the gory details,<br>
+but I 've copy pasted the text document that I used over and
+over again for every git repo I split off and that made
+sense to me at the time,<br>
+to the end of this mail. Maybe you find it inspirational :)<br>
+<br>
+The general idea is that you duplicate your git repo and
+delete all the directories that are not part of your new
+smaller repo (both on HEAD as in every single commit).<br>
+</blockquote>
+yes, its the delete parts we are trying (to delete the
+history) and its taking *ages*.<br>
+<br>
+<blockquote type="cite">Then do this for every small repo
+until you've got everything. Make one small repo "take the
+rest", so you don't lose any history for sure (even if it's
+in the wrong repo).<br>
+The only pitfall is that for every directory that you want
+to split off, you 'll want to know it's old names too.<br>
+</blockquote>
+trying to retain the old dir names...<br>
+</blockquote>
+I mean the old names of renamed modules. For example,
+drools-planner was <br>
+once named drools-solver, so both dir names where in "the list".<br>
+<blockquote type="cite"><br>
+<blockquote type="cite">
+<blockquote type="cite">if we just remove it in master then
+the history is still bogging down the main git repo.<br>
+<br>
+</blockquote>
+The main repo is thrown away, but do create 1 small repo
+that takes the rest (=&gt; does excludes instead of
+includes).<br>
+If the other repo's done their job properly, that one should
+be small too.<br>
+</blockquote>
+yes..but how ;)<br>
+<blockquote type="cite">Depending on the split-off:<br>
+Canonical: git filter-branch --index-filter 'git ls-tree
+--name-only<br>
+--full-tree $GIT_COMMIT | grep -v "^\(\(\.git\)\|...\)$" |
+xargs -I {}<br>
+git rm --cached -r {}' --tag-name-filter cat --prune-empty
+-- --all<br>
+</blockquote>
+this looks very much like the one we are trying - its ETA is 2
+days for just one move/cleanup.<br>
+<br>
+You are making it sound like you could do your moves in much
+less time than that ?<br>
+<br>
+</blockquote>
+Yes, I remember it wasn't a problem to do a split in a single
+day, so it <br>
+can't have taken more than a few hours for one move/cleanup.<br>
+I do have faint memory that they way you do it matters a lot for
+<br>
+performance, especially the inner command must use the index or
+<br>
+something. One other way didn't work fast at all.<br>
+Do you use "git ls-tree" too in the inner command?<br>
+<br>
+Can you copy paste your command?<br>
+Also, check the other commands I ran before starting the actual
+cleanup, <br>
+such as detaching the origin etc.<br>
+<br>
+With kind regards,<br>
+Geoffrey De Smet<br>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 14</span></div>
+<div style="color:#666">
+<pre></pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>if we just remove it in master then the history is still bogging down the main git repo.
+
+</pre>
+</blockquote>
+<pre>The main repo is thrown away, but do create 1 small repo that takes the rest (=&gt; does excludes instead of includes).
+If the other repo's done their job properly, that one should be small too.
+</pre>
+</blockquote>
+<pre>yes..but how ;)
+</pre>
+<blockquote type="cite">
+<pre>Depending on the split-off:
+Canonical: git filter-branch --index-filter 'git ls-tree --name-only
+--full-tree $GIT_COMMIT | grep -v "^\(\(\.git\)\|...\)$" | xargs -I {}
+git rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all
+</pre>
+</blockquote>
+<pre>this looks very much like the one we are trying - its ETA is 2 days for just one move/cleanup.
+
+You are making it sound like you could do your moves in much less time than that ?
+
+</pre>
+</blockquote>
+<pre>Yes, I remember it wasn't a problem to do a split in a single day, so it can't have taken more than a few hours for one move/cleanup.
+I do have faint memory that they way you do it matters a lot for performance, especially the inner command must use the index or something. One other way didn't work fast at all.
+Do you use "git ls-tree" too in the inner command?
+</pre>
+</blockquote>
+<pre>
+yes
+
+</pre>
+<blockquote type="cite">
+<pre>
+Can you copy paste your command?
+</pre>
+</blockquote>
+<pre>
+<a href="https://gist.github.com/3712693" target="_blank">https://gist.github.com/3712693</a> has my raw notes (based off nickboldts who have been doing other attempts). The gist is:
+
+	git filter-branch --prune-empty --index-filter 'git ls-tree -r --name-only --full-tree $GIT_COMMIT | grep -v -E "^common/|^runtime/|^tests/|^usage/" | xargs -n 1 git rm --cached -r' -- --all
+
+</pre>
+<blockquote type="cite">
+<pre>Also, check the other commands I ran before starting the actual cleanup, such as detaching the origin etc.
+</pre>
+</blockquote>
+<pre>
+I think I got most of them - the one I wasn't sure about is that you called "git tag &lt;name&gt;" up front ..not sure what that was meant for?
+
+I'll look more monday ;)
+
+/max
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:rgb(105,57,33)!important;text-decoration:none!important;font-weight:bold" href="mailto:mrietvel@redhat.com" target="_blank">Marco Rietveld</a></span></b><br>
+<span style="color:#666">September 16</span></div>
+<div style="color:#666"><br>
+<div><br>
+With regards to locking down the repository, I <i>think</i>
+you<br>
+might be able to get around it by doing the following: <br>
+<br>
+<br>
+1. Make a local mirror of the svn repo<br>
+(<a href="http://blog.notreally.org/2006/11/30/setting-up-a-subversion-mirror-repository-using-svnsync/" target="_blank">http://blog.notreally.org/2006/11/30/setting-up-a-subversion-mirror-repository-using-svnsync/</a>)<br>
+<br>
+2. Do your git migration stuff <br>
+2b. In the meantime everyone keeps using svn. <br>
+3. Once the git migration is done, lock the svn repo, and
+svnsync<br>
+your local svn mirror (for the commits people have done in the<br>
+meantime)<br>
+4. Pull in the new svn commits with svn-git and push them to
+your<br>
+new git repo. <br>
+<br>
+<br>
+I'm not sure of this, but it seemed like it might be possible.
+<br>
+<br>
+Marco<br>
+</div>
+</div>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:rgb(34,39,65)!important;text-decoration:none!important;font-weight:bold" href="mailto:jgreene@redhat.com" target="_blank">Jason Greene</a></span></b><br>
+<span style="color:#666">September 16</span></div>
+<div style="color:#666">
+<pre>Assuming that you do not find a way to speed up the process, you could just do it twice. Once to import all history to date, and then one last time for all work done after that task is done. So worse case scenario a week.
+
+Then you will end up with two sets of git repos (old splits and new splits). Then all you have to do is rebase your new repos on top of the corresponding old repos. That should complete instantly.
+
+On Sep 14, 2012, at 12:42 PM, Max Rydahl Andersen wrote:
+
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>if we just remove it in master then the history is still bogging down the main git repo.
+
+</pre>
+</blockquote>
+<pre>The main repo is thrown away, but do create 1 small repo that takes the rest (=&gt; does excludes instead of includes).
+If the other repo's done their job properly, that one should be small too.
+</pre>
+</blockquote>
+<pre>yes..but how ;)
+</pre>
+<blockquote type="cite">
+<pre>Depending on the split-off:
+Canonical: git filter-branch --index-filter 'git ls-tree --name-only
+--full-tree $GIT_COMMIT | grep -v "^\(\(\.git\)\|...\)$" | xargs -I {}
+git rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all
+</pre>
+</blockquote>
+<pre>this looks very much like the one we are trying - its ETA is 2 days for just one move/cleanup.
+
+You are making it sound like you could do your moves in much less time than that ?
+
+</pre>
+</blockquote>
+<pre>Yes, I remember it wasn't a problem to do a split in a single day, so it can't have taken more than a few hours for one move/cleanup.
+I do have faint memory that they way you do it matters a lot for performance, especially the inner command must use the index or something. One other way didn't work fast at all.
+Do you use "git ls-tree" too in the inner command?
+</pre>
+</blockquote>
+<pre>
+yes
+
+</pre>
+<blockquote type="cite">
+<pre>
+Can you copy paste your command?
+</pre>
+</blockquote>
+<pre>
+<a href="https://gist.github.com/3712693" target="_blank">https://gist.github.com/3712693</a> has my raw notes (based off nickboldts who have been doing other attempts). The gist is:
+
+   git filter-branch --prune-empty --index-filter 'git ls-tree -r --name-only --full-tree $GIT_COMMIT | grep -v -E "^common/|^runtime/|^tests/|^usage/" | xargs -n 1 git rm --cached -r' -- --all
+
+</pre>
+<blockquote type="cite">
+<pre>Also, check the other commands I ran before starting the actual cleanup, such as detaching the origin etc.
+</pre>
+</blockquote>
+<pre>
+I think I got most of them - the one I wasn't sure about is that you called "git tag &lt;name&gt;" up front ..not sure what that was meant for?
+
+I'll look more monday ;)
+
+/max
+
+</pre>
+</blockquote>
+<pre></pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:rgb(34,39,65)!important;text-decoration:none!important;font-weight:bold" href="mailto:jgreene@redhat.com" target="_blank">Jason Greene</a></span></b><br>
+<span style="color:#666">September 16</span></div>
+<div style="color:#666">
+<pre>What I mean is:
+Freeze svn 
+Svndump
+Unfreeze svn
+git svn clone
+Git filter branch (into 5 repos or whatever your split is)
+
+Then:
+Freeze svn
+Svndump changes since previous dump
+Git svn clone
+Git filter branch into 5 new repos
+
+For each repo old and new pair:
+Clone old into a local repo
+Add a remote for the new
+
+For all branches to graft:
+Git checkout new branch
+Git rebase --onto old-branch &lt;graft-sha&gt;
+Git checkout old branch
+Git merge -ff-only new
+git push new
+
+Graft-sha will be the "initial import" commit that comes in when you do a partial import from svn
+
+You also will have to correct any tags, but hopefully you won't have that many in that week or so timeframe.
+
+On Sep 16, 2012, at 5:29 PM, Jason Greene wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>Assuming that you do not find a way to speed up the process, you could just do it twice. Once to import all history to date, and then one last time for all work done after that task is done. So worse case scenario a week.
+
+Then you will end up with two sets of git repos (old splits and new splits). Then all you have to do is rebase your new repos on top of the corresponding old repos. That should complete instantly.
+
+On Sep 14, 2012, at 12:42 PM, Max Rydahl Andersen wrote:
+
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>if we just remove it in master then the history is still bogging down the main git repo.
+
+</pre>
+</blockquote>
+<pre>The main repo is thrown away, but do create 1 small repo that takes the rest (=&gt; does excludes instead of includes).
+If the other repo's done their job properly, that one should be small too.
+</pre>
+</blockquote>
+<pre>yes..but how ;)
+</pre>
+<blockquote type="cite">
+<pre>Depending on the split-off:
+Canonical: git filter-branch --index-filter 'git ls-tree --name-only
+--full-tree $GIT_COMMIT | grep -v "^\(\(\.git\)\|...\)$" | xargs -I {}
+git rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all
+</pre>
+</blockquote>
+<pre>this looks very much like the one we are trying - its ETA is 2 days for just one move/cleanup.
+
+You are making it sound like you could do your moves in much less time than that ?
+
+</pre>
+</blockquote>
+<pre>Yes, I remember it wasn't a problem to do a split in a single day, so it can't have taken more than a few hours for one move/cleanup.
+I do have faint memory that they way you do it matters a lot for performance, especially the inner command must use the index or something. One other way didn't work fast at all.
+Do you use "git ls-tree" too in the inner command?
+</pre>
+</blockquote>
+<pre>
+yes
+
+</pre>
+<blockquote type="cite">
+<pre>
+Can you copy paste your command?
+</pre>
+</blockquote>
+<pre>
+<a href="https://gist.github.com/3712693" target="_blank">https://gist.github.com/3712693</a> has my raw notes (based off nickboldts who have been doing other attempts). The gist is:
+
+  git filter-branch --prune-empty --index-filter 'git ls-tree -r --name-only --full-tree $GIT_COMMIT | grep -v -E "^common/|^runtime/|^tests/|^usage/" | xargs -n 1 git rm --cached -r' -- --all
+
+</pre>
+<blockquote type="cite">
+<pre>Also, check the other commands I ran before starting the actual cleanup, such as detaching the origin etc.
+</pre>
+</blockquote>
+<pre>
+I think I got most of them - the one I wasn't sure about is that you called "git tag &lt;name&gt;" up front ..not sure what that was meant for?
+
+I'll look more monday ;)
+
+/max
+
+</pre>
+</blockquote>
+<pre></pre>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed66d9!important;text-decoration:none!important;font-weight:bold" href="mailto:gdesmet@redhat.com" target="_blank">Geoffrey De Smet</a></span></b><br>
+<span style="color:#666">September 17</span></div>
+<div style="color:#666"><br>
+<br>
+Slow:<br>
+<u></u> <br>
+<pre>git filter-branch --prune-empty --index-filter 'git ls-tree -r --name-only --full-tree $GIT_COMMIT | grep -v -E "^common/|^runtime/|^tests/|^usage/" | xargs -n 1 git rm --cached -r' -- --all
+</pre>
+<br>
+<br>
+Versus fast:<br>
+<blockquote type="cite"><br>
+<pre>git filter-branch --index-filter 'git ls-tree --name-only --full-tree $GIT_COMMIT | grep -v "^\(\(\.git\)\|\(drools\-docs\)\|\(drools-planner\)\|\(drools-solver\)\)$" | xargs -I {} git rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all</pre>
+<br>
+</blockquote>
+<br>
+<br>
+Throwing out the duplicate stuff, that gives:<br>
+<br>
+Slow: git filter-branch --index-filter 'git ls-tree <b>-r</b><br>
+--name-only --full-tree $GIT_COMMIT | grep -v <b>-E</b><br>
+"^common/|^runtime/|^tests/|^usage/" | xargs <b>-n</b> 1 git
+rm<br>
+--cached -r'<br>
+Fast:&nbsp; git filter-branch --index-filter 'git ls-tree
+--name-only<br>
+--full-tree $GIT_COMMIT | grep -v "<b>^\(\(\.git\)</b>\|\(drools\-docs\)\|\(drools-planner\)\|\(drools-solver\)\)$"<br>
+| xargs <b>-I</b><b> {}</b> git rm --cached -r <b>{}</b>' <b>--tag-name-filter<br>
+cat</b><br>
+<br>
+Nothing of those diffs triggers anything in my memory :/<br>
+But I still believe it's the part between the single quoths
+that<br>
+just too slow. Just try my version of our command and see if
+it<br>
+takes less than a few hours:<br>
+<pre>git filter-branch --index-filter 'git ls-tree --name-only --full-tree $GIT_COMMIT | grep -v "^\(\(\.git\)\|\(common\)\|\(runtime\)\|\(tests\)\|\(usage\)\)$" | xargs -I {} git rm --cached -r {}' --tag-name-filter cat --prune-empty -- --all</pre>
+<br>
+<u></u></div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:rgb(93,45,113)!important;text-decoration:none!important;font-weight:bold" href="mailto:dneary@redhat.com" target="_blank">Dave Neary</a></span></b><br>
+<span style="color:#666">September 17</span></div>
+<div style="color:#666"><br>
+Hi,<br>
+<br>
+On 09/13/2012 09:52 PM, Max Rydahl Andersen wrote:<br>
+<blockquote type="cite">we are looking at migrating jbosstools
+from svn and in that progress splitting up into smaller
+git-repositories.<br>
+<br>
+We already reduced the history (5 years cut out, leaving just
+2) greatly in the our svn-git mirror at
+<a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a>,<br>
+but even with that trying to use filter-branch to split up the
+repo is taking forever even for "small parts".<br>
+<br>
+Anyone with tips on speeding this up or is 4-6 days of
+migration where SVN have to be locked down for everyone the
+only way forward ?<br>
+<br>
+Or should we bite the bullet and just take tip of trunk and
+keep svn as the archive and old-maintancne place ?<br>
+<br>
+Any recommendations/suggestions very welcome!<br>
+</blockquote>
+<br>
+How about:<br>
+<br>
+1. svnadmin dump &gt;repos.dmp<br>
+2. for module in mod1 mod2 mod3 mod4; do cat repos.dmp |
+svndumpfilter <br>
+include $module &gt; repos_${module}.dmp; done<br>
+3. Create a repo per module, load from the dump file<br>
+4. svn2git for each repo<br>
+<br>
+It'll be long, but not hundreds of hours. And easily scriptable.<br>
+<br>
+Cheers,<br>
+Dave.<br>
+<br>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:rgb(34,39,65)!important;text-decoration:none!important;font-weight:bold" href="mailto:jgreene@redhat.com" target="_blank">Jason Greene</a></span></b><br>
+<span style="color:#666">September 17</span></div>
+<div style="color:#666">
+<pre>Ever hear the joke "how many engineers does it take to migrate svn to git"? :)
+
+On Sep 17, 2012, at 3:47 AM, Dave Neary wrote:
+
+</pre>
+<blockquote type="cite">
+<pre>Hi,
+
+On 09/13/2012 09:52 PM, Max Rydahl Andersen wrote:
+</pre>
+<blockquote type="cite">
+<pre>we are looking at migrating jbosstools from svn and in that progress splitting up into smaller git-repositories.
+
+We already reduced the history (5 years cut out, leaving just 2) greatly in the our svn-git mirror at <a href="https://github.com/jbosstools/jbosstools-svn-mirror" target="_blank">https://github.com/jbosstools/jbosstools-svn-mirror</a>,
+but even with that trying to use filter-branch to split up the repo is taking forever even for "small parts".
+
+Anyone with tips on speeding this up or is 4-6 days of migration where SVN have to be locked down for everyone the only way forward ?
+
+Or should we bite the bullet and just take tip of trunk and keep svn as the archive and old-maintancne place ?
+
+Any recommendations/suggestions very welcome!
+</pre>
+</blockquote>
+<pre>
+How about:
+
+1. svnadmin dump &gt;repos.dmp
+2. for module in mod1 mod2 mod3 mod4; do cat repos.dmp | svndumpfilter include $module &gt; repos_${module}.dmp; done
+3. Create a repo per module, load from the dump file
+4. svn2git for each repo
+
+It'll be long, but not hundreds of hours. And easily scriptable.
+
+--
+Dave Neary
+
+</pre>
+</blockquote>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 18</span><br>
+</div>
+<div style="color:#666">
+<pre></pre>
+<blockquote type="cite">
+<pre>How about:
+
+1. svnadmin dump &gt;repos.dmp
+2. for module in mod1 mod2 mod3 mod4; do cat repos.dmp | svndumpfilter include $module &gt; repos_${module}.dmp; done
+3. Create a repo per module, load from the dump file
+4. svn2git for each repo
+
+It'll be long, but not hundreds of hours. And easily scriptable.
+</pre>
+</blockquote>
+<pre>Didn't know about svndumpfilter.... will try and see if that is faster than git filter-branch.
+
+/max</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 18</span></div>
+<div style="color:#666">
+<pre></pre>
+<blockquote type="cite">
+<pre>Git filter branch (into 5 repos or whatever your split is)
+</pre>
+</blockquote>
+<pre>
+This is where the culprit is - after experimenting back and forth, trying to optimize each step I found that the difference between running
+filter-branch on i.e. hibernate-orm and my jbosstools-svn-mirror is that each of our commits contains on average ~35.000 files where as hibernate has ~7000.
+
+Resulting in ~5 times slower git-filter-branch...
+
+/max
+</pre>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img src="author.png" style="float:left;min-height:48px;margin-right:5px"><b><span><a style="color:#ed8866!important;text-decoration:none!important;font-weight:bold" href="mailto:max.andersen@redhat.com" target="_blank">Max Rydahl Andersen</a></span></b><br>
+<span style="color:#666">September 19</span></div>
+<div style="color:#666">
+<pre>
+On 18 Sep 2012, at 15:09, Max Rydahl Andersen wrote:
+</pre>
+<blockquote type="cite">
+<blockquote type="cite">
+<pre>Git filter branch (into 5 repos or whatever your split is)
+</pre>
+</blockquote>
+<pre>This is where the culprit is - after experimenting back and forth, trying to optimize each step I found that the difference between running
+filter-branch on i.e. hibernate-orm and my jbosstools-svn-mirror is that each of our commits contains on average ~35.000 files where as hibernate has ~7000.
+
+Resulting in ~5 times slower git-filter-branch...
+
+/max
+</pre>
+</blockquote>
+<pre>git_fast_filter process the whole repo &lt; 1hr.
+
+git filter branch is for wussies.
+
+/max
+</pre>
+</div>
+</div>
+<div style="border-top:1px solid #888;min-height:15px;width:70%;margin:0 auto;margin-top:15px">&nbsp;</div>
+<div style="overflow:auto"><img style="float:left;min-height:48px;margin-right:5px" src="author.png"><b><span><a target="_blank" href="mailto:gdesmet@redhat.com" style="color:#ed8866!important;text-decoration:none!important;font-weight:bold">Geoffrey
+De Smet</a></span></b><br>
+<span style="color:#666">September 25</span></div>
+<div style="color:#666"><br>
+My original, 2-year old brain dump is here:<br>
+<a target="_blank" href="http://drools.46999.n3.nabble.com/Split-up-the-gory-details-for-future-reference-td2602519.html">http://drools.46999.n3.nabble.<wbr></wbr>com/Split-up-the-gory-details-<wbr></wbr>for-future-reference-<wbr></wbr>td2602519.html</a><br>
+<br>
+Max's new scripts are a big improvement over that (especially
+with the virtual fs trick), so it's probably only worth looking
+at Max's stuff at this point.<br>
+<br>
+With kind regards,<br>
+Geoffrey De Smet<br>
+</div>
+</div>
+</div>
+</div></font>
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+</div>
+</div>
+</body></html>
