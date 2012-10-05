@@ -24,7 +24,7 @@ then
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-base $GLOBAL_EXCLUDE "^common/.*|^tests/.*|^runtime/.*|^usage/.*"
 
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-server $GLOBAL_EXCLUDE "^archives/.*|^as/.*|^jmx/.*"
-
+ 
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-freemarker $GLOBAL_EXCLUDE "^freemarker/.*"
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-birt $GLOBAL_EXCLUDE "^birt/.*"
 
@@ -40,8 +40,9 @@ then
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-central $GLOBAL_EXCLUDE "^maven.*|^examples.*|^central.*" 
 
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-documentation $GLOBAL_EXCLUDE "^documentation.*"
- python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-gwt $GLOBAL_EXCLUDE "^gwt.*"
- python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-bpel $GLOBAL_EXCLUDE "^bpel.*"
+ python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-gwt $GLOBAL_EXCLUDE "^gwt/.*"
+ python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-bpel $GLOBAL_EXCLUDE "^bpel/.*"
+
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-jbpm $GLOBAL_EXCLUDE "^jbpm.*|^flow.*"
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-runtime-soa $GLOBAL_EXCLUDE "^runtime-soa.*"
 
@@ -51,7 +52,10 @@ then
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-build-continous $GLOBAL_EXCLUDE "^build/util.*|^build/emma.*|^build/jacoco.*"
 
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-hibernate $GLOBAL_EXCLUDE "^hibernatetools/.*/"
- 
+
+ python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-esb $GLOBAL_EXCLUDE "^esb/.*"
+ python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-openshift $GLOBAL_EXCLUDE "^openshift/.*"
+
  python filter_tests.py $ORIGINAL_REPO $NEWROOT/jbosstools-integration-tests 
 
 fi
