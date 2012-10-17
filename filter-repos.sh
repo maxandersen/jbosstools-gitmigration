@@ -60,6 +60,7 @@ then
 
 fi
 
+ python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-openshift $GLOBAL_EXCLUDE "^openshift/.*"
 
 cd $NEWROOT
 
