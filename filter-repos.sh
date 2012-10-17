@@ -16,7 +16,7 @@ ORIGINAL_REPO=jbosstools-full-svn-mirror
 
 GLOBAL_EXCLUDE="^documentation/qa.*|^documentation/development.*|^xulrunner2.*|^vpe/contrib/org.mozilla.xulrunner.gtk.linux.x86_64_1.8.1.4-20080112.jar.*|^documentation/.*wnk|^documentation/.*swf|^deltacloud/plugins/org.jboss.tools.deltacloud.client/target|^hibernate-tools/plugins/org.hibernate.eclipse.libs/target/.*|^hibernateools/plugins/org.jboss.tools.hibernate4_0/target/|^portlet/docs/reference/target/.*|^as/features/org.jboss.ide.eclipse.as.archives.integration.feature/target/.*|^as/features/org.jboss.ide.eclipse.as.jmx.integration.feature/target/.*|^as/features/org.jboss.ide.eclipse.as.server.rse.integration.feature/target/.*|^as/features/org.jboss.ide.eclipse.as.serverAdapter.wtp.feature/target/.*|^as/plugins/org.jboss.ide.eclipse.as.dmr/target/.*|^as/plugins/org.jboss.ide.eclipse.as.jmx.integration/target/.*|^as/plugins/org.jboss.ide.eclipse.as.management.core/target/.*|^as/plugins/org.jboss.ide.eclipse.as.openshift.core/target/.*|^as/plugins/org.jboss.ide.eclipse.as.rse.core/target/.*|^as/plugins/org.jboss.ide.eclipse.as.rse.ui/target/.*|^as/plugins/org.jboss.tools.openshift.express.client/target/.*|^archives/tests/org.jboss.tools.archives.ui.bot.test/bin.*|^as/plugins/org.jboss.ide.eclipse.as.classpath.core/bin.*|^as/plugins/org.jboss.ide.eclipse.as.classpath.ui/bin.*|^as/plugins/org.jboss.ide.eclipse.as.jmx.integration/bin.*|^as/plugins/org.jboss.ide.eclipse.as.management.as7/bin.*|^as/plugins/org.jboss.ide.eclipse.as.ssh/bin.*|^as/tests/org.jboss.ide.eclipse.as.test/bin.*|^cdi/plugins/org.jboss.tools.cdi.solder.core/bin.*|^cdi/tests/org.jboss.tools.cdi.seam3.bot.test/bin.*|^cdi/tests/org.jboss.tools.cdi.solder.core.test/bin.*|^common/plugins/org.jboss.tools.common.ui.sidebyside/bin.*|^deltacloud/plugins/org.jboss.tools.deltacloud.client/bin.*|^plugins/org.eclipse.bpel.apache.ode.deploy.model/bin.*|^plugins/org.eclipse.bpel.apache.ode.deploy.ui/bin.*|^plugins/org.eclipse.bpel.apache.ode.runtime/bin.*|^plugins/org.eclipse.bpel.common.model/bin.*|^plugins/org.eclipse.bpel.common.ui/bin.*|^plugins/org.eclipse.bpel.model/bin.*|^plugins/org.eclipse.bpel.runtimes/bin.*|^plugins/org.eclipse.bpel.ui/bin.*|^plugins/org.eclipse.bpel.validator/bin.*|^plugins/org.eclipse.bpel.wsil.model/bin.*|^plugins/org.eclipse.bpel.xpath10/bin.*|^plugins/org.jboss.tools.bpel.cheatsheet/bin.*|^plugins/org.jboss.tools.jbpm.convert/bin.*|^plugins/org.jboss.tools.neweditor.sidebyside/bin.*|^plugins/org.jboss.tools.ws.core/bin.*|^plugins/org.jboss.tools.ws.ui/bin.*|^tests/org.eclipse.bpel.ui.tests/bin.*|^tests/org.jboss.tools.bpel.ui.bot.test/bin.*|^tests/org.jboss.tools.jbpm.convert.test/bin.*|^tests/org.jboss.tools.jst.ui.bot.test/bin.*|^tests/org.jboss.tools.jst.ui.firstrun.bot.test/bin.*|^tests/org.jboss.tools.jst.web.kb.test/projects/utility/bin.*|^tests/org.jboss.tools.vpe.ui.bot.test/bin.*|^usage/org.jboss.tools.usage.test/bin.*|^usage/org.jboss.tools.usage/bin.*|^usage/plugins/org.jboss.tools.usage/bin.*|^usage/tests/org.jboss.tools.usage.test/bin.*"
 
-FILTER=no
+FILTER=yes
 
 if [ "$FILTER" == "yes" ]
 then
@@ -57,10 +57,11 @@ then
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-openshift $GLOBAL_EXCLUDE "^openshift/.*"
 
  python filter_tests.py $ORIGINAL_REPO $NEWROOT/jbosstools-integration-tests $GLOBAL_EXCLUDE
+ python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-openshift $GLOBAL_EXCLUDE "^openshift/.*"
 
 fi
 
- python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-openshift $GLOBAL_EXCLUDE "^openshift/.*"
+
 
 cd $NEWROOT
 
