@@ -6,11 +6,12 @@ from git_fast_filter import get_commit_count, get_total_objects
 import re
 import datetime
 
-if len(sys.argv) != 3:
-  raise SystemExit("Syntax:\n  %s SOURCE_REPO TARGET_REPO")
+if len(sys.argv) != 5:
+  raise SystemExit("Syntax:\n  %s SOURCE_REPO TARGET_REPO REGULAR_EXP_INCLUDE REGULAR_EXP_EXCLUDE")
 source_repo = sys.argv[1]
 target_repo = sys.argv[2]
-regexp = re.compile('^[^/]*/[^/]*/[^/]*\.bot.*')
+exclude = re.compile(sys.argv[3])
+include = re.compile(sys.argv[4])
 
 start = datetime.datetime.now()
 
@@ -35,10 +36,11 @@ def my_commit_callback(commit):
   print_progress()
   new_file_changes = []
   for change in commit.file_changes:
-      if regexp.match(change.filename):
-        change.filename = re.sub('^[^/]*/[^/]*/org','tests/org',change.filename)
-        new_file_changes.append(change)
-        #print commit.branch + ":" + change.filename
+    if exclude.match(change.filename):
+      pass
+    elif include.match(change.filename):
+      new_file_changes.append(change)
+      #print commit.branch + ":" + change.filename
 
   commit.file_changes = new_file_changes
   
