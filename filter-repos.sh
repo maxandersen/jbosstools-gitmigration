@@ -56,7 +56,7 @@ then
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-esb $GLOBAL_EXCLUDE "^esb/.*"
  python filter_repo.py $ORIGINAL_REPO $NEWROOT/jbosstools-openshift $GLOBAL_EXCLUDE "^openshift/.*"
 
- python filter_tests.py $ORIGINAL_REPO $NEWROOT/jbosstools-integration-tests 
+ python filter_tests.py $ORIGINAL_REPO $NEWROOT/jbosstools-integration-tests $GLOBAL_EXCLUDE
 
 fi
 
