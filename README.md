@@ -12,7 +12,6 @@ readonly url to avoid being able to mirror back.
 
       $ git clone git://github.com/jbosstools/jbosstools-full-svn-mirror.git
       $ cd jbosstools-svn-mirro && git pull --all
-      $ git branch -m trunk master
 
 2) Backup local repo for reuse later
 
@@ -27,6 +26,9 @@ readonly url to avoid being able to mirror back.
       $ cd jbosstools-svn-mirror
       # get latest changes (if svn still active)
       $ git pull 
+      # rename trunk to master to follow git naming convention plus indicate this is not a svn mirror. 
+      $ git branch -m trunk master
+
       # delete the branches with "dead/experimental" stuff
       $ git branch -a -r | grep -E "jbpm-jpdl-4.0.0.beta2|https|origin/jbosstools-4.0.0.Alpha1|tags/jbosstools-3.0.x|3.2.helios|3.3.indigo|3.1.0.M3|vpe-spring|xulrunner-1.9.2.16|hibernatetools|dead|smooks|tycho_exp|modular_build" | xargs git branch -r -D 
       # delete old branches/tags.
