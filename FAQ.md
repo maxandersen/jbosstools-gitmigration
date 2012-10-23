@@ -20,14 +20,14 @@ There are more than a few reasons for this:
 Not everything was migrated because some content was old/garbage/not-relevant/not-applicable to the split up.
 You can see [JBIDE-12475](https://issues.jboss.org/browse/JBIDE-12475) for discussion and details on how the split was made.
 
-The following is a snapshot from the suggested layout of time of writing:
+The following is a snapshot from the suggested layout when migration began:
 
-   ![Overview](https://issues.jboss.org/secure/attachment/12357038/12357038_max_suggestio.png)
+   ![Overview](splitsuggestion.png)
 
 <table>
   <th>SVN location</th> <th>GitHub repo</th> <th>Gatekeeper</th> <th>Comments</th>
   <tr>	
-   <td>build</td>         <td>jbosstools-parent<br/>jbosstools-targetplatform<br/></td>     <td>TBD</td>  <td>Might not be available from day one</td>
+   <td>build</td>         <td>jbosstools-parent<br/>jbosstools-targetplatform<br/></td>     <td>release engineering</td>  <td>Might not be available from day one</td>
   </tr>
   <tr>
    <td>documentation</td> <td>jbosstools-documentation</td><td>TBD</td>

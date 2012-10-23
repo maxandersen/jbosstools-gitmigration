@@ -2,15 +2,18 @@
 
 ## Summary
 
-${summary} 
+${summary}
 
 ## Install
 
-_${project}_ is part of [JBoss Tools](http://jboss.org/tools) from which it can be [downloaded and installed](http://jboss.org/tools/download) on its own or together with the full JBoss Tools distribution.
+_${project}_ is part of [JBoss Tools](http://jboss.org/tools) from
+which it can be [downloaded and installed](http://jboss.org/tools/download)
+on its own or together with the full JBoss Tools distribution.
 
 ## Get the code
 
-The easiest way to get started with the code is to [create your own fork](http://help.github.com/forking/), and then clone your fork:
+The easiest way to get started with the code is to [create your own fork](http://help.github.com/forking/), 
+and then clone your fork:
 
     $ git clone git@github.com:<you>/${githubproject}.git
     $ cd ${githubproject}
@@ -22,15 +25,14 @@ At any time, you can pull changes from the upstream and merge them onto your mas
     $ git pull upstream master          # fetches all 'upstream' changes and merges 'upstream/master' onto your 'master' branch
     $ git push origin                   # pushes all the updates to your fork, which should be in-sync with 'upstream'
 
-The general idea is to keep your 'master' branch in-sync with the 'upstream/master'.
+The general idea is to keep your 'master' branch in-sync with the
+'upstream/master'.
 
 ## Building ${project}
 
 To build _${project}_ requires specific versions of Java and
-Maven. Also, there is some Maven setup. The [How to Build JBoss Tools
-with Maven 3](https://community.jboss.org/wiki/HowToBuildJBossToolsWithMaven3#OR_use_MavenAnt_to_get_it)
-document will guide you through that setup. Specifically, perform
-these steps this document identifies:
+Maven. Also, there is some Maven setup. The [How to Build JBoss Tools with Maven 3](https://community.jboss.org/wiki/HowToBuildJBossToolsWithMaven3)
+document will guide you through that setup.
 
 This command will run the build:
 
@@ -74,8 +76,7 @@ You can then push your topic branch and its changes into your public fork reposi
 
 	$ git push origin jbide-1234         # pushes your topic branch into your public fork of ${project}
 
-And then [generate a
-pull-request](http://help.github.com/pull-requests/) where we can
+And then [generate a pull-request](http://help.github.com/pull-requests/) where we can
 review the proposed changes, comment on them, discuss them with you,
 and if everything is good merge the changes right into the official
 repository.

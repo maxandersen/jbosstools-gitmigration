@@ -28,11 +28,14 @@ readonly url to avoid being able to mirror back.
       $ git pull 
       # rename trunk to master to follow git naming convention plus indicate this is not a svn mirror. 
       $ git branch -m trunk master
+      $ git branch -rd origin/trunk
 
       # delete the branches with "dead/experimental" stuff
       $ git branch -a -r | grep -E "jbpm-jpdl-4.0.0.beta2|https|origin/jbosstools-4.0.0.Alpha1|tags/jbosstools-3.0.x|3.2.helios|3.3.indigo|3.1.0.M3|vpe-spring|xulrunner-1.9.2.16|hibernatetools|dead|smooks|tycho_exp|modular_build" | xargs git branch -r -D 
       # delete old branches/tags.
       $ git branch -a -r | grep -vE "GA" | grep -v "\.x" | grep -vi "final" | grep -v "jbosstools-4" | grep -v jbpm-jpdl | grep -v trunk | xargs git branch -r -D
+      # delete ambigious/not used branches
+      $ git branch -D jbosstools-4.0.0.Alpha2
 
 4) Checkout all branches locally so not just tracked remotely:
 

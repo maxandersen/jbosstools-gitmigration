@@ -8,5 +8,9 @@ export GITHUBUSER=maxandersen
 export PYTHONPATH=$(pwd)/git_fast_filter/:$PYTHONPATH
 echo $PYTHONPATH
 
+### 
+export PATH=$(pwd):$PATH
+echo $PATH
+
 ### Root dir where the resulting repositories will be
 export NEWROOT=/Volumes/Photos/gits
