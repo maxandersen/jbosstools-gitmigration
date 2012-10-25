@@ -30,10 +30,10 @@ The following is a snapshot from the suggested layout when migration began:
    <td>build</td>         <td>jbosstools-parent<br/>jbosstools-targetplatform<br/></td>     <td>release engineering</td>  <td>Might not be available from day one</td>
   </tr>
   <tr>
-   <td>documentation</td> <td>jbosstools-documentation</td><td>TBD</td>
+   <td>documentation</td> <td>jbosstools-documentation</td><td>Isaac Rooskov/Max Andersen</td>
   </tr>
   <tr>	
-   <td>freemarker</td>    <td>jbosstools-freemarker</td><td>TBD</td> 
+   <td>freemarker</td>    <td>jbosstools-freemarker</td><td>Denis Golovin</td> 
   </tr>
   <tr>	
    <td>forge</td>         <td>jbosstools-forge</td>     <td>Koen Aers</td>
@@ -51,16 +51,16 @@ The following is a snapshot from the suggested layout when migration began:
    <td>jst</td>     <td>jbosstools-jst</td>             <td>Alexey Kazakov</td>  
   </tr>
   <tr>	
-   <td>portlet</td>     <td>jbosstools-portlet</td>     <td>Snjezana Peceo (TBD)</td>  <td>Kept on its own since Portal team said they would like to update/replace it</td>
+   <td>portlet</td>     <td>jbosstools-portlet</td>     <td>Snjezana Peceo</td>  <td>Kept on its own since Portal team said they would like to update/replace it</td>
   </tr>
   <tr>	
-   <td>ws</td>   <td>jbosstools-webservices</td>        <td>Xavier Coulon (Brian?)</td>  
+   <td>ws</td>   <td>jbosstools-webservices</td>        <td>Xavier Coulon</td>  
   </tr>
   <tr>	
    <td>xulrunner</td>   <td>jbosstools-xulrunner</td>   <td>Yahor Radtsevich</td>  
   </tr>
   <tr>	
-   <td>hibernatetools</td><td>jbosstools-hibernate</td> <td>Koen Aers (TBD)</td>  <td>renamed from hibernatetools to follow the jbosstools-framework convention.</td> 
+   <td>hibernatetools</td><td>jbosstools-hibernate</td> <td>Koen Aers</td>  <td>renamed from hibernatetools to follow the jbosstools-framework convention.</td> 
   </tr>
   <tr>	
    <td>birt</td>          <td>jbosstools-birt</td>      <td>Snjezana Peco</td>
@@ -79,7 +79,7 @@ The following is a snapshot from the suggested layout when migration began:
      runtime<br/>
      usage<br/>
      tests</br/>
-   </td>                  <td>jbosstools-base</td>    <td>TBD (Alexey/Rob?)</td>
+   </td>                  <td>jbosstools-base</td>    <td>Alexey/Rob</td>
   </tr>
   <tr>	
     <td>
