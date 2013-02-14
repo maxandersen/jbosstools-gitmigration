@@ -74,6 +74,9 @@ readonly url to avoid being able to mirror back.
   
 9) Delete big files (for anything missed in the above steps, it's much cheaper to do this during filter_repo!)
 
+      # Make sure you have all branches/tags pulled (git clone is not sufficient) 
+      git pull --all
+      
       # locate big files
       
       git verify-pack -v .git/objects/pack/pack-*.idx | grep blob | sort -k3nr | head | while read s x b x; do git rev-list --all --objects | grep $s | awk '{print "'"$b"'",$0;}'; done
@@ -90,6 +93,15 @@ readonly url to avoid being able to mirror back.
       # Delete repos (if needed)
       $ find jbosstools-* -maxdepth 0 | xargs -n 1 -I {} curl -u "maxandersen:$GITHUBPWD" https://api.github.com/$GITHUB_ROOT/scratch-{} -X DELETE
 
+11) Push changes
+
+      # You might need to use --force here if the destination repo is new or contain old history.
+      # Push all branches
+      $ git push --all  
+      # Push all tags
+      $ git push --tags
+      
+      
 Resources used:
 
   * [GitHub API][] - GitHub REST API allowed me to setup and destroy multiple repositories very easily. Not having to click through the web ui safed me a lot of time. 
