@@ -76,6 +76,8 @@ readonly url to avoid being able to mirror back.
 
       # Make sure you have all branches/tags pulled (git clone is not sufficient) 
       git pull --all
+      # (same as step 4)
+      $ git branch -a | sed -e "s/remotes.origin\///g" | xargs -I {} git branch {} remotes/origin/{}
       
       # locate big files
       
