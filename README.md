@@ -72,12 +72,17 @@ readonly url to avoid being able to mirror back.
    commits, each repo with just one subdir is filter-branched to have
    the subdir as root and finally a second garbage collection.
   
-9) Delete big files (maybe filter that earlier ?)
+9) Delete big files (for anything missed in the above steps, it's much cheaper to do this during filter_repo!)
 
-      TBD
+      # locate big files
       
       git verify-pack -v .git/objects/pack/pack-*.idx | grep blob | sort -k3nr | head | while read s x b x; do git rev-list --all --objects | grep $s | awk '{print "'"$b"'",$0;}'; done
 
+      # filterbranch to remove the file(s)
+      
+      git filter-branch --prune-empty -d /dev/shm/scratch --index-filter "git rm --cached -f --ignore-unmatch oops.iso" --tag-name-filter cat -- --all
+      
+      
 10) Create github repos
 
       $ find jbosstools-* -maxdepth 0 | xargs -n 1 -I {} createrepo.sh {}
@@ -94,7 +99,8 @@ Resources used:
   * [ramdisk for OSX][] - Scripts to create a memory mapped filesystem on OSX
   * [Clean out empty commits][] - empty commits occur often when commits has no file in them because of the filter or if changes only relate to svn props. Makes the history messy.
   * [Detach subdirectory into separate git repository][] - 
-
+  * [Purge huge files from history][] - Be careful; this rewrites history
+ 
 [Github API]: http://developer.github.com/v3/ "Github REST API"
 [git_fast_filter]: gitorious.org/git_fast_filter "Git fast filter"
 [Atlassian SVN to Git Migration]: http://blogs.atlassian.com/2012/01/moving-confluence-from-subversion-to-git
@@ -102,6 +108,7 @@ Resources used:
 [ramdisk for OSX]: https://gist.github.com/822455
 [Clean out empty commits]: http://stackoverflow.com/questions/7067015/svn2git-with-exclude-any-way-to-ignore-the-empty-blank-commits?lq=1
 [Detach subdirectory into separate git repository]: http://stackoverflow.com/questions/359424/detach-subdirectory-into-separate-git-repository
+[Purge huge files from history]: http://stackoverflow.com/questions/2100907/how-do-i-purge-a-huge-file-from-commits-in-git-history
 
 
 
