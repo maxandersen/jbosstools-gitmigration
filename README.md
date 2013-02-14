@@ -87,6 +87,8 @@ readonly url to avoid being able to mirror back.
       
       git filter-branch --prune-empty -d /dev/shm/scratch --index-filter "git rm --cached -f --ignore-unmatch oops.iso" --tag-name-filter cat -- --all
       
+      # garbage collect the repository (destructive)
+      $ repo_gc.sh
       
 10) Create github repos
 
