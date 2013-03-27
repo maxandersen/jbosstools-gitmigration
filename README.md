@@ -71,7 +71,15 @@ readonly url to avoid being able to mirror back.
    And then master is checked out, garbage collected, removed empty
    commits, each repo with just one subdir is filter-branched to have
    the subdir as root and finally a second garbage collection.
-  
+   
+   Done by filter-repos.sh:
+
+    $ echo xxx Checking out master.....
+    $ git checkout master
+    $ deleteemptybranches.sh $GIT_WORK_TREE
+    $ git reset --hard && git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d && git reflog expire --expire=now --all && git gc --aggressive --prune=now
+    $ git filter-branch --tag-name-filter cat --prune-empty -- --all
+ 
 9) Delete big files (for anything missed in the above steps, it's much cheaper to do this during filter_repo!)
 
       # Make sure you have all branches/tags pulled (git clone is not sufficient) 
@@ -143,4 +151,6 @@ Resources used:
 
 
 
+Svn Sync notes: 
+svnsync sync file:///home/svnsync/repos/jbosstools-mirror
 
