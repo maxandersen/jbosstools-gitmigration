@@ -139,7 +139,7 @@ Resources used:
 [Detach subdirectory into separate git repository]: http://stackoverflow.com/questions/359424/detach-subdirectory-into-separate-git-repository
 [Purge huge files from history]: http://stackoverflow.com/questions/2100907/how-do-i-purge-a-huge-file-from-commits-in-git-history
 [Fix line endings]: http://stackoverflow.com/questions/1510798/trying-to-fix-line-endings-with-git-filter-branch-but-having-no-luck
-
+[Subversion replication at Atlassian]: http://blogs.atlassian.com/2008/11/subversion_replication_at_atla/
 
 
 
