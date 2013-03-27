@@ -108,11 +108,6 @@ then
  filterrepo $NEWROOT/jbosstools-esb "^esb/.*"
  filterrepo $NEWROOT/jbosstools-openshift "^openshift/.*"
 
-
- filterrepo $NEWROOT/jbosstools-openshift "^openshift/.*"
-
- filterrepo $NEWROOT/jbosstools-openshift "^openshift/.*"
-
  filterrepo $NEWROOT/jbosstools-download.jboss.org "^download.jboss.org/.*"
 
  python filter_tests.py $ORIGINAL_REPO $NEWROOT/jbosstools-integration-tests $GLOBAL_EXCLUDE
