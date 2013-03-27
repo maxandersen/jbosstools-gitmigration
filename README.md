@@ -90,6 +90,17 @@ readonly url to avoid being able to mirror back.
       # garbage collect the repository (destructive)
       $ repo_gc.sh
       
+9a) (Missed in our original migration) [Fix line endings][] - can be done later.
+
+    See 
+    $ echo "* text=auto" >>.gitattributes
+    $ rm .git/index     # Remove the index to force git to
+    $ git reset         # re-scan the working directory
+    $ git status        # Show files that will be normalized
+    $ git add -u
+    $ git add .gitattributes
+    $ git commit -m "Introduce end-of-line normalization"
+
 10) Create github repos
 
       $ find jbosstools-* -maxdepth 0 | xargs -n 1 -I {} createrepo.sh {}
@@ -110,13 +121,15 @@ Resources used:
 
   * [GitHub API][] - GitHub REST API allowed me to setup and destroy multiple repositories very easily. Not having to click through the web ui safed me a lot of time. 
   * [git_fast_filter][] - Git Fast Filter is several magnitudes faster than using git filter-branch. Highly recommended for splitting up a git repository.
+  * [Subversion replication at Atlassian][] - Page describing in detail svn mirroring
   * [Atlassian SVN to Git Migration][] - Page describing how Atlassian migrated by using a svn mirror, sync and git svn fetch.
   * [Using tmpfs with filter_branch][] - If you have to use filter-branch then use it together with a memory mapped filesystem for speed reasons
   * [ramdisk for OSX][] - Scripts to create a memory mapped filesystem on OSX
   * [Clean out empty commits][] - empty commits occur often when commits has no file in them because of the filter or if changes only relate to svn props. Makes the history messy.
   * [Detach subdirectory into separate git repository][] - 
   * [Purge huge files from history][] - Be careful; this rewrites history
- 
+  * [Fix line endings][] - Explain methods to fix/unify lineendings in your repository
+
 [Github API]: http://developer.github.com/v3/ "Github REST API"
 [git_fast_filter]: gitorious.org/git_fast_filter "Git fast filter"
 [Atlassian SVN to Git Migration]: http://blogs.atlassian.com/2012/01/moving-confluence-from-subversion-to-git
@@ -125,6 +138,7 @@ Resources used:
 [Clean out empty commits]: http://stackoverflow.com/questions/7067015/svn2git-with-exclude-any-way-to-ignore-the-empty-blank-commits?lq=1
 [Detach subdirectory into separate git repository]: http://stackoverflow.com/questions/359424/detach-subdirectory-into-separate-git-repository
 [Purge huge files from history]: http://stackoverflow.com/questions/2100907/how-do-i-purge-a-huge-file-from-commits-in-git-history
+[Fix line endings]: http://stackoverflow.com/questions/1510798/trying-to-fix-line-endings-with-git-filter-branch-but-having-no-luck
 
 
 
