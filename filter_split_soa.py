@@ -10,7 +10,7 @@ if len(sys.argv) != 4:
   raise SystemExit("Syntax:\n  %s SOURCE_REPO TARGET_REPO soa|non-soa")
 source_repo = sys.argv[1]
 target_repo = sys.argv[2]
-soa_re = re.compile('^tests/org.jboss.tools.bpel.ui.bot.test.*|^tests/org.jboss.tools.drools.ui.bot.test.*|^tests/org.jboss.tools.esb.ui.bot.test.*|^tests/org.jboss.tools.jbpm.ui.bot.test.*|^tests/org.jboss.tools.modeshape.rest.ui.bot.test.*|^tests/org.jboss.tools.teiid.reddeer.*|^tests/org.teiid.designer.ui.bot.test.*')
+soa_re = re.compile('^tests/org.jboss.tools.bpel.reddeer.*|^tests/org.jboss.tools.bpel.ui.bot.test.*|^tests/org.jboss.tools.bpmn2.itests.*|^tests/org.jboss.tools.drools.*|^tests/org.jboss.tools.esb.ui.bot.test.*|^tests/org.jboss.tools.jbpm.ui.bot.test.*|^tests/org.jboss.tools.modeshape.*|^tests/org.jboss.tools.switchyard.reddeer.*|^tests/org.jboss.tools.switchyard.ui.bot.test.*|^tests/org.jboss.tools.teiid.reddeer.*|^tests/org.jboss.tools.teiid.ui.bot.test.*')
 poms_re = re.compile('^pom.xml|^tests/pom.xml')
 if sys.argv[3] == 'soa':
   soa = 1
